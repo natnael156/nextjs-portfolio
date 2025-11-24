@@ -1281,7 +1281,7 @@ export function SettingsTab() {
 
         <div className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
           <p className="text-sm text-green-400">
-            <strong>✅ Automatic:</strong> Password changes are saved permanently to the database. You don't need to update any files!
+            <strong>✅ Automatic:</strong> Password changes are saved permanently to the database. You don&apos;t need to update any files!
           </p>
         </div>
       </div>

@@ -165,7 +165,7 @@ export default function About() {
             className="space-y-6"
           >
             <h3 className="text-3xl md:text-4xl font-bold">
-              Hi, I'm <span className="gradient-text">{profile?.name || 'Your Name'}</span>
+              Hi, I&apos;m <span className="gradient-text">{profile?.name || 'Your Name'}</span>
             </h3>
             <p className="text-xl text-gray-300 leading-relaxed">
               A passionate <span className="text-blue-400 font-semibold">{profile?.title || 'Front-End Developer'}</span> with 

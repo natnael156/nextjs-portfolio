@@ -131,7 +131,7 @@ export default function Contact() {
             Get In <span className="gradient-text">Touch</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Have a project in mind? Let's collaborate and create something extraordinary together
+            Have a project in mind? Let&apos;s collaborate and create something extraordinary together
           </p>
         </motion.div>
 
@@ -143,7 +143,7 @@ export default function Contact() {
             transition={{ duration: 0.8 }}
             className="lg:col-span-2 order-2 lg:order-1"
           >
-            <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 gradient-text">Let's Connect</h3>
+            <h3 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 gradient-text">Let&apos;s Connect</h3>
             
             <div className="space-y-4 md:space-y-6 mb-8 md:mb-10">
               {contactInfo.map((item, index) => (
@@ -328,7 +328,7 @@ export default function Contact() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center text-green-400 font-semibold"
                   >
-                    Thank you! Your email reached it's destination I'll get back to you Within 24 hour. 🎉
+                    Thank you! Your email reached its destination I&apos;ll get back to you Within 24 hour. 🎉
                   </motion.p>
                 )}
               </div>
