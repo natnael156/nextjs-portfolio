@@ -54,6 +54,7 @@ export default function Resume() {
   const [education, setEducation] = useState<any[]>([]);
   const [certifications, setCertifications] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     // Fetch Experience
@@ -96,12 +97,53 @@ export default function Resume() {
       });
   }, []);
 
-  const handleDownload = () => {
-    // Create a simple resume download
-    const link = document.createElement("a");
-    link.href = "/resume.pdf"; // You'll need to add your actual resume PDF to the public folder
-    link.download = "Resume.pdf";
-    link.click();
+  const handleDownload = async () => {
+    if (downloading) return; // Prevent multiple clicks
+    
+    setDownloading(true);
+    
+    try {
+      // Fetch the file as a blob to ensure proper download
+      const response = await fetch('/resume.pdf');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch resume');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create download link
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Natnael_Tefera_Resume.pdf";
+      
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      
+      // Show success message
+      setTimeout(() => {
+        setDownloading(false);
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error downloading resume:', error);
+      
+      // Fallback: Try opening in new tab
+      try {
+        window.open('/resume.pdf', '_blank');
+        setDownloading(false);
+      } catch (fallbackError) {
+        console.error('Fallback download failed:', fallbackError);
+        alert('Unable to download resume. Please try:\n1. Right-click the button and select "Save link as..."\n2. Or contact me directly for a copy.');
+        setDownloading(false);
+      }
+    }
   };
 
   return (
@@ -122,19 +164,31 @@ export default function Resume() {
           
           <motion.button
             onClick={handleDownload}
-            whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(59, 130, 246, 0.6)" }}
-            whileTap={{ scale: 0.95 }}
-            className="px-10 py-5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full font-bold text-lg inline-flex items-center gap-3 shadow-2xl relative overflow-hidden group"
+            disabled={downloading}
+            whileHover={!downloading ? { scale: 1.05, boxShadow: "0 0 40px rgba(59, 130, 246, 0.6)" } : {}}
+            whileTap={!downloading ? { scale: 0.95 } : {}}
+            className={`px-10 py-5 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-full font-bold text-lg inline-flex items-center gap-3 shadow-2xl relative overflow-hidden group ${downloading ? 'opacity-75 cursor-wait' : 'cursor-pointer'}`}
           >
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600"
               initial={{ x: "100%" }}
-              whileHover={{ x: "0%" }}
+              whileHover={!downloading ? { x: "0%" } : {}}
               transition={{ duration: 0.5 }}
             />
-            <Download size={22} className="relative z-10" />
-            <span className="relative z-10">Download Resume</span>
+            <motion.div
+              animate={downloading ? { rotate: 360 } : {}}
+              transition={downloading ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
+            >
+              <Download size={22} className="relative z-10" />
+            </motion.div>
+            <span className="relative z-10">
+              {downloading ? 'Downloading...' : 'Download Resume'}
+            </span>
           </motion.button>
+          
+          <p className="text-sm text-gray-500 mt-4">
+            Tip: Right-click the button above and select &quot;Save link as...&quot; if download doesn&apos;t start
+          </p>
         </motion.div>
 
         {/* Experience Section */}

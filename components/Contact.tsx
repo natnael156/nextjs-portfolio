@@ -41,7 +41,9 @@ export default function Contact() {
     
     try {
       console.log('Submitting contact form...');
-      const response = await fetch('/api/contact', {
+      
+      // Send to Formspree for email delivery
+      const formspreeResponse = await fetch('https://formspree.io/f/movzdlrb', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,10 +51,16 @@ export default function Contact() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-      console.log('Response:', data);
+      // Also save to database
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      }).catch(err => console.log('DB save failed (non-critical):', err));
 
-      if (data.success) {
+      if (formspreeResponse.ok) {
         setIsSuccess(true);
         console.log('Message sent successfully!');
         // Reset form after 3 seconds
@@ -61,8 +69,9 @@ export default function Contact() {
           setFormData({ name: "", email: "", message: "" });
         }, 3000);
       } else {
-        console.error('Failed to send:', data.error);
-        alert(`Failed to send message: ${data.error}\n\nPlease email me directly at: ${profile?.email || 'natnaeltefera156@gmail.com'}`);
+        const errorData = await formspreeResponse.json();
+        console.error('Failed to send:', errorData);
+        alert(`Failed to send message. Please email me directly at: ${profile?.email || 'natnaeltefera156@gmail.com'}`);
       }
     } catch (error) {
       console.error('Error sending message:', error);

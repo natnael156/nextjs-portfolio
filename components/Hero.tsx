@@ -54,7 +54,9 @@ export default function Hero() {
           >
             <motion.div className="flex items-center justify-center gap-2 mb-4">
               <Sparkles className="text-blue-400 animate-pulse" size={24} />
-              <span className="text-blue-400 font-semibold">Available for Freelance</span>
+              <span className="text-blue-400 font-semibold">
+                {profile?.availabilityText || 'Available for Freelance'}
+              </span>
             </motion.div>
 
             <motion.h1 
@@ -63,17 +65,14 @@ export default function Hero() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="gradient-text">Front-End</span>
+              <span className="gradient-text">{profile?.heroTitle || 'Front-End'}</span>
               <br />
               <TypeAnimation
-                sequence={[
-                  "Developer",
-                  2000,
-                  "Designer",
-                  2000,
-                  "Creator",
-                  2000,
-                ]}
+                sequence={
+                  profile?.heroAnimatedTexts && profile.heroAnimatedTexts.length > 0
+                    ? profile.heroAnimatedTexts.flatMap((text: string) => [text, 2000])
+                    : ["Developer", 2000, "Designer", 2000, "Creator", 2000]
+                }
                 wrapper="span"
                 speed={50}
                 className="text-white"
@@ -88,7 +87,7 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto"
           >
-            Crafting exceptional digital experiences with modern web technologies
+            {profile?.heroSubtitle || 'Crafting exceptional digital experiences with modern web technologies'}
           </motion.p>
 
           <motion.div

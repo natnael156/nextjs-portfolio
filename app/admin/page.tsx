@@ -204,6 +204,10 @@ function ProfileTab() {
     image: "",
     github: "https://github.com",
     linkedin: "https://linkedin.com",
+    heroTitle: "Front-End",
+    heroSubtitle: "Crafting exceptional digital experiences with modern web technologies",
+    heroAnimatedTexts: ["Developer", "Designer", "Creator"],
+    availabilityText: "Available for Freelance",
     yearsExperience: 5,
     projectsCompleted: 50,
     happyClients: 30,
@@ -229,6 +233,10 @@ function ProfileTab() {
             image: data.data.image || "",
             github: data.data.github || "https://github.com",
             linkedin: data.data.linkedin || "https://linkedin.com",
+            heroTitle: data.data.heroTitle || "Front-End",
+            heroSubtitle: data.data.heroSubtitle || "Crafting exceptional digital experiences with modern web technologies",
+            heroAnimatedTexts: data.data.heroAnimatedTexts || ["Developer", "Designer", "Creator"],
+            availabilityText: data.data.availabilityText || "Available for Freelance",
             yearsExperience: data.data.yearsExperience || 5,
             projectsCompleted: data.data.projectsCompleted || 50,
             happyClients: data.data.happyClients || 30,
@@ -358,6 +366,62 @@ function ProfileTab() {
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
           />
+        </div>
+      </div>
+
+      {/* Hero Section Fields */}
+      <div className="glass p-6 rounded-2xl">
+        <h3 className="text-xl font-bold mb-4 gradient-text">🎯 Hero Section (Homepage)</h3>
+        <p className="text-sm text-gray-400 mb-6">Customize the main text that appears when visitors first land on your site</p>
+        
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Main Title (e.g., &quot;Front-End&quot;)</label>
+            <input
+              type="text"
+              value={formData.heroTitle}
+              onChange={(e) => setFormData({ ...formData, heroTitle: e.target.value })}
+              placeholder="Front-End"
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
+            />
+            <p className="text-xs text-gray-500 mt-1">This appears as the large gradient text at the top</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Subtitle Description</label>
+            <textarea
+              value={formData.heroSubtitle}
+              onChange={(e) => setFormData({ ...formData, heroSubtitle: e.target.value })}
+              rows={2}
+              placeholder="Crafting exceptional digital experiences with modern web technologies"
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white resize-none"
+            />
+            <p className="text-xs text-gray-500 mt-1">The description text below the animated words</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Animated Words (comma-separated)</label>
+            <input
+              type="text"
+              value={formData.heroAnimatedTexts.join(", ")}
+              onChange={(e) => setFormData({ ...formData, heroAnimatedTexts: e.target.value.split(",").map(s => s.trim()) })}
+              placeholder="Developer, Designer, Creator"
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
+            />
+            <p className="text-xs text-gray-500 mt-1">Words that rotate/animate below the main title (separate with commas)</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Availability Badge Text</label>
+            <input
+              type="text"
+              value={formData.availabilityText}
+              onChange={(e) => setFormData({ ...formData, availabilityText: e.target.value })}
+              placeholder="Available for Freelance"
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
+            />
+            <p className="text-xs text-gray-500 mt-1">The badge text at the very top (e.g., &quot;Available for Freelance&quot;, &quot;Open to Work&quot;)</p>
+          </div>
         </div>
       </div>
 

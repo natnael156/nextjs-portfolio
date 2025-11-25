@@ -10,6 +10,11 @@ const ProfileSchema = new mongoose.Schema({
   image: { type: String, default: '/profile.jpg' },
   github: { type: String, default: 'https://github.com' },
   linkedin: { type: String, default: 'https://linkedin.com' },
+  // Hero section
+  heroTitle: { type: String, default: 'Front-End' },
+  heroSubtitle: { type: String, default: 'Crafting exceptional digital experiences with modern web technologies' },
+  heroAnimatedTexts: { type: [String], default: ['Developer', 'Designer', 'Creator'] },
+  availabilityText: { type: String, default: 'Available for Freelance' },
   // About section stats
   yearsExperience: { type: Number, default: 5 },
   projectsCompleted: { type: Number, default: 50 },

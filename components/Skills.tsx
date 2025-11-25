@@ -413,6 +413,13 @@ export default function Skills() {
                       size={80} 
                       style={{ color: skill.color }}
                     />
+                  ) : skill.icon && skill.icon.startsWith('http') ? (
+                    <img 
+                      src={skill.icon} 
+                      alt={skill.name}
+                      className="w-20 h-20 object-contain"
+                      style={{ filter: `drop-shadow(0 0 10px ${skill.color})` }}
+                    />
                   ) : (
                     <span className="text-6xl" style={{ color: skill.color }}>
                       {skill.icon || skill.name.charAt(0)}

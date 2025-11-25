@@ -267,10 +267,83 @@ export function SkillsTab() {
     });
   };
 
-  const popularEmojis = [
-    "⚛️", "▲", "🎨", "💅", "🔥", "⚡", "🎬", "🎮", "🔄", "📦", 
-    "🌐", "💎", "🐻", "🔍", "🎯", "🃏", "🌲", "🎭", "📱", "♿", 
-    "🔀", "🐙", "🅱️", "Ⓜ️", "JS", "TS", "📗", "🍃", "🐘", "🐬"
+  const programmingLanguages = [
+    // Frontend
+    { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", category: "Frontend", color: "#61DAFB" },
+    { name: "Vue.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg", category: "Frontend", color: "#4FC08D" },
+    { name: "Angular", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg", category: "Frontend", color: "#DD0031" },
+    { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg", category: "Frontend", color: "#000000" },
+    { name: "Svelte", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg", category: "Frontend", color: "#FF3E00" },
+    { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg", category: "Frontend", color: "#E34F26" },
+    { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg", category: "Frontend", color: "#1572B6" },
+    { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg", category: "Frontend", color: "#06B6D4" },
+    { name: "Bootstrap", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg", category: "Frontend", color: "#7952B3" },
+    { name: "Material-UI", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg", category: "Frontend", color: "#007FFF" },
+    { name: "Sass/SCSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg", category: "Frontend", color: "#CC6699" },
+    
+    // JavaScript/TypeScript
+    { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg", category: "Language", color: "#F7DF1E" },
+    { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", category: "Language", color: "#3178C6" },
+    { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg", category: "Backend", color: "#339933" },
+    { name: "Express.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg", category: "Backend", color: "#000000" },
+    { name: "Nest.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nestjs/nestjs-original.svg", category: "Backend", color: "#E0234E" },
+    
+    // Backend Languages
+    { name: "Python", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", category: "Language", color: "#3776AB" },
+    { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg", category: "Language", color: "#007396" },
+    { name: "C#", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg", category: "Language", color: "#239120" },
+    { name: "C++", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg", category: "Language", color: "#00599C" },
+    { name: "Go", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg", category: "Language", color: "#00ADD8" },
+    { name: "Rust", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg", category: "Language", color: "#000000" },
+    { name: "PHP", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg", category: "Language", color: "#777BB4" },
+    { name: "Ruby", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ruby/ruby-original.svg", category: "Language", color: "#CC342D" },
+    { name: "Swift", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg", category: "Language", color: "#FA7343" },
+    { name: "Kotlin", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg", category: "Language", color: "#7F52FF" },
+    { name: "Dart", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg", category: "Language", color: "#0175C2" },
+    { name: "Scala", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scala/scala-original.svg", category: "Language", color: "#DC322F" },
+    { name: "Elixir", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/elixir/elixir-original.svg", category: "Language", color: "#4B275F" },
+    
+    // Databases
+    { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg", category: "Database", color: "#47A248" },
+    { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg", category: "Database", color: "#4169E1" },
+    { name: "MySQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg", category: "Database", color: "#4479A1" },
+    { name: "Redis", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg", category: "Database", color: "#DC382D" },
+    { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg", category: "Database", color: "#FFCA28" },
+    { name: "SQLite", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg", category: "Database", color: "#003B57" },
+    { name: "Oracle", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg", category: "Database", color: "#F80000" },
+    { name: "Cassandra", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cassandra/cassandra-original.svg", category: "Database", color: "#1287B1" },
+    
+    // DevOps & Tools
+    { name: "Docker", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg", category: "DevOps", color: "#2496ED" },
+    { name: "Kubernetes", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg", category: "DevOps", color: "#326CE5" },
+    { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg", category: "Tools", color: "#F05032" },
+    { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg", category: "Tools", color: "#181717" },
+    { name: "GitLab", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg", category: "Tools", color: "#FC6D26" },
+    { name: "AWS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original-wordmark.svg", category: "Cloud", color: "#FF9900" },
+    { name: "Azure", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg", category: "Cloud", color: "#0078D4" },
+    { name: "Google Cloud", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg", category: "Cloud", color: "#4285F4" },
+    { name: "Vercel", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vercel/vercel-original.svg", category: "Cloud", color: "#000000" },
+    { name: "Netlify", icon: "https://www.vectorlogo.zone/logos/netlify/netlify-icon.svg", category: "Cloud", color: "#00C7B7" },
+    
+    // Mobile
+    { name: "React Native", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", category: "Mobile", color: "#61DAFB" },
+    { name: "Flutter", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg", category: "Mobile", color: "#02569B" },
+    { name: "Ionic", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ionic/ionic-original.svg", category: "Mobile", color: "#3880FF" },
+    
+    // Testing
+    { name: "Jest", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jest/jest-plain.svg", category: "Testing", color: "#C21325" },
+    { name: "Cypress", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cypressio/cypressio-original.svg", category: "Testing", color: "#17202C" },
+    { name: "Playwright", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/playwright/playwright-original.svg", category: "Testing", color: "#2EAD33" },
+    { name: "Selenium", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg", category: "Testing", color: "#43B02A" },
+    
+    // Other
+    { name: "GraphQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg", category: "API", color: "#E10098" },
+    { name: "Webpack", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/webpack/webpack-original.svg", category: "Tools", color: "#8DD6F9" },
+    { name: "Vite", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg", category: "Tools", color: "#646CFF" },
+    { name: "Babel", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/babel/babel-original.svg", category: "Tools", color: "#F9DC3E" },
+    { name: "Redux", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg", category: "State Management", color: "#764ABC" },
+    { name: "Three.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg", category: "3D/Graphics", color: "#000000" },
+    { name: "D3.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/d3js/d3js-original.svg", category: "Visualization", color: "#F9A03C" },
   ];
 
   return (
@@ -309,6 +382,93 @@ export function SkillsTab() {
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
             />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold mb-2 text-gray-300">
+              Quick Select Technology (Auto-fills name, icon, category & color)
+            </label>
+            <select
+              onChange={(e) => {
+                const selected = programmingLanguages.find(lang => lang.name === e.target.value);
+                if (selected) {
+                  setFormData({
+                    ...formData,
+                    name: selected.name,
+                    icon: selected.icon,
+                    category: selected.category,
+                    color: selected.color,
+                  });
+                }
+              }}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+              style={{
+                colorScheme: 'dark'
+              }}
+            >
+              <option value="" style={{ backgroundColor: '#1f2937', color: '#fff' }}>-- Select a technology or enter manually below --</option>
+              <optgroup label="Frontend" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Frontend").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Languages" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Language").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Backend" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Backend").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Databases" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Database").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="DevOps" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "DevOps").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Cloud" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Cloud").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Mobile" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Mobile").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Testing" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Testing").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Tools" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "Tools").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="State Management" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "State Management").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="API" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => l.category === "API").map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+              <optgroup label="Other" style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                {programmingLanguages.filter(l => !["Frontend", "Language", "Backend", "Database", "DevOps", "Cloud", "Mobile", "Testing", "Tools", "State Management", "API"].includes(l.category)).map(lang => (
+                  <option key={lang.name} value={lang.name} style={{ backgroundColor: '#1f2937', color: '#fff' }}>{lang.name}</option>
+                ))}
+              </optgroup>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">Or manually enter your own below</p>
           </div>
 
           <div>
@@ -373,10 +533,18 @@ export function SkillsTab() {
           <p className="text-sm font-semibold mb-3 text-gray-400">Preview:</p>
           <div className="flex items-start gap-4">
             <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-lg flex-shrink-0"
+              className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 p-3"
               style={{ backgroundColor: formData.color }}
             >
-              {formData.icon || "?"}
+              {formData.icon ? (
+                formData.icon.startsWith('http') ? (
+                  <img src={formData.icon} alt={formData.name} className="w-full h-full object-contain" />
+                ) : (
+                  <span className="text-4xl">{formData.icon}</span>
+                )
+              ) : (
+                <span className="text-4xl">?</span>
+              )}
             </div>
             <div className="flex-1">
               <p className="text-xl font-bold">{formData.name || "Skill Name"}</p>
@@ -408,25 +576,6 @@ export function SkillsTab() {
               Cancel
             </button>
           )}
-        </div>
-      </div>
-
-      {/* Emoji Picker */}
-      <div className="glass p-6 rounded-2xl">
-        <h3 className="text-lg font-bold mb-4">Quick Emoji Picker</h3>
-        <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-3">
-          {popularEmojis.map((emoji, i) => (
-            <motion.button
-              key={i}
-              whileHover={{ scale: 1.2, rotate: 10 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setFormData({ ...formData, icon: emoji })}
-              className="text-3xl p-3 glass rounded-xl hover:bg-white/10 transition-all"
-              title={`Use ${emoji}`}
-            >
-              {emoji}
-            </motion.button>
-          ))}
         </div>
       </div>
 
