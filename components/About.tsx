@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 import { Code2, Rocket, Zap } from "lucide-react";
+import { useProfile } from "@/lib/ProfileContext";
 
 const features = [
   {
@@ -26,25 +27,7 @@ const features = [
 export default function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [profile, setProfile] = useState<any>(null);
-
-  useEffect(() => {
-    // Fetch profile data from API
-    fetch('/api/profile')
-      .then(res => res.json())
-      .then(data => {
-        console.log('About - Profile data:', data);
-        if (data.success) {
-          setProfile(data.data);
-          console.log('About - Stats:', {
-            years: data.data.yearsExperience,
-            projects: data.data.projectsCompleted,
-            clients: data.data.happyClients
-          });
-        }
-      })
-      .catch(err => console.error('Error fetching profile:', err));
-  }, []);
+  const { profile } = useProfile();
 
   return (
     <section id="about" className="relative py-32 overflow-hidden">
@@ -78,13 +61,20 @@ export default function About() {
                 boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)",
               }}
             >
-              <div className="relative rounded-3xl overflow-hidden">
+              <div className="relative rounded-3xl overflow-hidden bg-gray-800 aspect-square">
                 <motion.img
-                  src={profile?.image || "/profile.jpg"}
+                  src={profile?.image || "/images/profile/default.svg"}
                   alt="Profile"
-                  className="w-full h-auto object-cover"
+                  width={600}
+                  height={600}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/images/profile/default.svg";
+                  }}
                 />
                 
                 {/* Multi-layer gradient overlay */}

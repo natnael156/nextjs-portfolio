@@ -196,7 +196,7 @@ export default function AdminPanel() {
 function ProfileTab() {
   const [formData, setFormData] = useState({
     name: "Your Name",
-    title: "Front-End Developer",
+    title: "Full Stack Developer",
     bio: "A passionate developer...",
     location: "San Francisco, CA",
     email: "hello@example.com",
@@ -204,9 +204,9 @@ function ProfileTab() {
     image: "",
     github: "https://github.com",
     linkedin: "https://linkedin.com",
-    heroTitle: "Front-End",
+    heroTitle: "Full Stack",
     heroSubtitle: "Crafting exceptional digital experiences with modern web technologies",
-    heroAnimatedTexts: ["Developer", "Designer", "Creator"],
+    heroAnimatedTexts: ["Developer", "UI/UX Designer", "Front-End Specialist"],
     availabilityText: "Available for Freelance",
     yearsExperience: 5,
     projectsCompleted: 50,
@@ -225,7 +225,7 @@ function ProfileTab() {
         if (data.success && data.data) {
           setFormData({
             name: data.data.name || "Your Name",
-            title: data.data.title || "Front-End Developer",
+            title: data.data.title || "Full Stack Developer",
             bio: data.data.bio || "A passionate developer...",
             location: data.data.location || "San Francisco, CA",
             email: data.data.email || "hello@example.com",
@@ -233,9 +233,9 @@ function ProfileTab() {
             image: data.data.image || "",
             github: data.data.github || "https://github.com",
             linkedin: data.data.linkedin || "https://linkedin.com",
-            heroTitle: data.data.heroTitle || "Front-End",
+            heroTitle: data.data.heroTitle || "Full Stack",
             heroSubtitle: data.data.heroSubtitle || "Crafting exceptional digital experiences with modern web technologies",
-            heroAnimatedTexts: data.data.heroAnimatedTexts || ["Developer", "Designer", "Creator"],
+            heroAnimatedTexts: data.data.heroAnimatedTexts || ["Developer", "UI/UX Designer", "Front-End Specialist"],
             availabilityText: data.data.availabilityText || "Available for Freelance",
             yearsExperience: data.data.yearsExperience || 5,
             projectsCompleted: data.data.projectsCompleted || 50,
@@ -251,15 +251,40 @@ function ProfileTab() {
       .catch(err => console.error('Error loading profile:', err));
   }, []);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-        setFormData({ ...formData, image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Show preview immediately
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to public folder
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'profile');
+
+        const response = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          // Store the public path instead of base64
+          setFormData(prev => ({ ...prev, image: data.path }));
+          console.log('Image uploaded:', data.path);
+        } else {
+          alert('Failed to upload image: ' + data.error);
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert('Failed to upload image');
+      }
     }
   };
 
@@ -376,12 +401,12 @@ function ProfileTab() {
         
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-semibold mb-2 text-gray-300">Main Title (e.g., &quot;Front-End&quot;)</label>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Main Title (e.g., &quot;Full Stack&quot;, &quot;Front-End&quot;)</label>
             <input
               type="text"
               value={formData.heroTitle}
               onChange={(e) => setFormData({ ...formData, heroTitle: e.target.value })}
-              placeholder="Front-End"
+              placeholder="Full Stack"
               className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
             />
             <p className="text-xs text-gray-500 mt-1">This appears as the large gradient text at the top</p>
@@ -405,7 +430,7 @@ function ProfileTab() {
               type="text"
               value={formData.heroAnimatedTexts.join(", ")}
               onChange={(e) => setFormData({ ...formData, heroAnimatedTexts: e.target.value.split(",").map(s => s.trim()) })}
-              placeholder="Developer, Designer, Creator"
+              placeholder="Developer, UI/UX Designer, Front-End Specialist"
               className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
             />
             <p className="text-xs text-gray-500 mt-1">Words that rotate/animate below the main title (separate with commas)</p>

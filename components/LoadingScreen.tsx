@@ -7,9 +7,10 @@ export default function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Faster loading - reduced from 800ms to 300ms
     setTimeout(() => {
       setIsLoading(false);
-    }, 800);
+    }, 300);
   }, []);
 
   if (!isLoading) return null;
@@ -18,44 +19,37 @@ export default function LoadingScreen() {
     <motion.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.3 }}
       className="fixed inset-0 z-[9999] bg-black flex items-center justify-center"
     >
       <div className="text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 0.5, type: "spring" }}
-          className="mb-8"
+          transition={{ duration: 0.3, type: "spring" }}
+          className="mb-6"
         >
           <motion.div
             animate={{
               rotate: 360,
             }}
             transition={{
-              duration: 2,
+              duration: 1,
               repeat: Infinity,
               ease: "linear",
             }}
-            className="w-20 h-20 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"
+            className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"
           />
         </motion.div>
         
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="text-4xl font-bold gradient-text"
+          transition={{ delay: 0.1 }}
+          className="text-3xl font-bold gradient-text"
         >
-          Loading Experience
+          Loading...
         </motion.h2>
-        
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 2, ease: "easeInOut" }}
-          className="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 mt-8 rounded-full max-w-xs mx-auto"
-        />
       </div>
     </motion.div>
   );

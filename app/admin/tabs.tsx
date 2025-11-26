@@ -116,13 +116,22 @@ export function ExperienceTab() {
             className="px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
           />
         </div>
-        <textarea
-          placeholder="Description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          rows={4}
-          className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white resize-none"
-        />
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-300">
+            Description
+            <span className="text-xs text-gray-500 ml-2">(Press Enter for new lines, use • for bullets)</span>
+          </label>
+          <textarea
+            placeholder="Description&#10;• First responsibility&#10;• Second responsibility&#10;• Third responsibility"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows={6}
+            className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white resize-none"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Tip: Press Enter to create new lines. Start lines with • for bullet points.
+          </p>
+        </div>
         <div className="flex gap-3">
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -158,7 +167,7 @@ export function ExperienceTab() {
                 <h4 className="text-xl font-bold">{exp.title}</h4>
                 <p className="text-blue-400">{exp.company}</p>
                 <p className="text-gray-400 text-sm">{exp.period} • {exp.location}</p>
-                <p className="text-gray-300 mt-2">{exp.description}</p>
+                <div className="text-gray-300 mt-2 whitespace-pre-line">{exp.description}</div>
               </div>
               <div className="flex gap-2">
                 <button
@@ -676,16 +685,42 @@ export function ProjectsTab() {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-        setFormData({ ...formData, image: reader.result as string });
-      };
-      reader.readAsDataURL(file);
+      
+      try {
+        // Show preview immediately
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+
+        // Upload to public folder
+        const uploadFormData = new FormData();
+        uploadFormData.append('file', file);
+        uploadFormData.append('folder', 'projects');
+
+        const response = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: uploadFormData,
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+          // Store the public path instead of base64
+          setFormData(prev => ({ ...prev, image: data.path }));
+          console.log('Project image uploaded:', data.path);
+        } else {
+          alert('Failed to upload image: ' + data.error);
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        alert('Failed to upload image');
+      }
     }
   };
 
@@ -997,13 +1032,22 @@ export function EducationTab() {
             className="px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
           />
         </div>
-        <textarea
-          placeholder="Description"
-          value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          rows={4}
-          className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white resize-none"
-        />
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-300">
+            Description
+            <span className="text-xs text-gray-500 ml-2">(Press Enter for new lines, use • for bullets)</span>
+          </label>
+          <textarea
+            placeholder="Description&#10;• Major coursework&#10;• Achievements&#10;• Activities"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows={6}
+            className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white resize-none"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Tip: Press Enter to create new lines. Start lines with • for bullet points.
+          </p>
+        </div>
         <div className="flex gap-3">
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -1039,7 +1083,7 @@ export function EducationTab() {
                 <h4 className="text-xl font-bold">{edu.degree}</h4>
                 <p className="text-blue-400">{edu.institution}</p>
                 <p className="text-gray-400 text-sm">{edu.period} • {edu.location}</p>
-                <p className="text-gray-300 mt-2">{edu.description}</p>
+                <div className="text-gray-300 mt-2 whitespace-pre-line">{edu.description}</div>
               </div>
               <div className="flex gap-2">
                 <button

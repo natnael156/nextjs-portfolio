@@ -5,12 +5,13 @@ import { ArrowDown, Github, Linkedin, Mail, Sparkles } from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
 import MagneticButton from "./MagneticButton";
 import Scene3D from "./Scene3D";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useProfile } from "@/lib/ProfileContext";
 
 export default function Hero() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const [profile, setProfile] = useState<any>(null);
+  const { profile } = useProfile();
 
   const rotateX = useTransform(mouseY, [-300, 300], [10, -10]);
   const rotateY = useTransform(mouseX, [-300, 300], [-10, 10]);
@@ -27,20 +28,9 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  useEffect(() => {
-    fetch('/api/profile')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setProfile(data.data);
-        }
-      })
-      .catch(err => console.error('Error fetching profile:', err));
-  }, []);
-
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <Scene3D />
+      {profile && <Scene3D />}
       
       <motion.div 
         className="container mx-auto px-6 z-10"
@@ -65,13 +55,13 @@ export default function Hero() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="gradient-text">{profile?.heroTitle || 'Front-End'}</span>
+              <span className="gradient-text">{profile?.heroTitle || 'Full Stack'}</span>
               <br />
               <TypeAnimation
                 sequence={
                   profile?.heroAnimatedTexts && profile.heroAnimatedTexts.length > 0
                     ? profile.heroAnimatedTexts.flatMap((text: string) => [text, 2000])
-                    : ["Developer", 2000, "Designer", 2000, "Creator", 2000]
+                    : ["Developer", 2000, "UI/UX Designer", 2000, "Front-End Specialist", 2000]
                 }
                 wrapper="span"
                 speed={50}

@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { Mail, MapPin, Phone, Send, Github, Linkedin } from "lucide-react";
+import { useProfile } from "@/lib/ProfileContext";
 
 export default function Contact() {
   const ref = useRef(null);
@@ -14,19 +15,7 @@ export default function Contact() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
-
-  // Fetch profile data for contact info
-  useEffect(() => {
-    fetch('/api/profile')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setProfile(data.data);
-        }
-      })
-      .catch(err => console.error('Error fetching profile:', err));
-  }, []);
+  const { profile } = useProfile();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

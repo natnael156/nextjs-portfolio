@@ -23,7 +23,8 @@ export default function ParticlesBackground() {
       size: number;
     }> = [];
 
-    const particleCount = 100;
+    // Reduced particle count for better performance
+    const particleCount = 50;
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -58,11 +59,12 @@ export default function ParticlesBackground() {
           const dy = particle.y - otherParticle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 150) {
+          // Reduced connection distance for better performance
+          if (distance < 120) {
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.2 * (1 - distance / 150)})`;
+            ctx.strokeStyle = `rgba(59, 130, 246, ${0.2 * (1 - distance / 120)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }

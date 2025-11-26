@@ -261,7 +261,9 @@ export default function Resume() {
                   </h4>
                   <p className="text-blue-400 font-bold text-xl mb-2">{job.company}</p>
                   <p className="text-gray-400 text-lg mb-4 font-semibold">📍 {job.location}</p>
-                  <p className="text-gray-300 text-lg leading-relaxed">{job.description}</p>
+                  <div className="text-gray-300 text-lg leading-relaxed whitespace-pre-line">
+                    {job.description}
+                  </div>
                 </div>
 
                 {/* Corner decoration */}
@@ -347,7 +349,7 @@ export default function Resume() {
                   </h4>
                   <p className="text-purple-400 font-bold text-xl mb-3">{edu.institution}</p>
                   <p className="text-gray-400 text-lg mb-5 font-semibold">📍 {edu.location} • {edu.period}</p>
-                  <p className="text-gray-300 text-lg leading-relaxed">{edu.description}</p>
+                  <div className="text-gray-300 text-lg leading-relaxed whitespace-pre-line">{edu.description}</div>
                 </div>
 
                 {/* Corner decoration */}

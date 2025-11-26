@@ -19,7 +19,8 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setIsLoaded(true), 800);
+    // Faster loading - reduced from 800ms to 300ms
+    setTimeout(() => setIsLoaded(true), 300);
   }, []);
 
   return (
@@ -29,19 +30,29 @@ export default function Home() {
       </AnimatePresence>
       
       <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 overflow-hidden" role="main">
-        {/* Professional Background Effects */}
+        {/* Professional Background Effects - Optimized */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-[1]">
           {/* Subtle gradient overlay for depth */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-950/5 to-purple-950/10" />
           
-          {/* Refined animated orbs */}
+          {/* Simplified animated orbs - reduced complexity */}
           <motion.div
             className="absolute top-20 left-10 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-3xl"
             animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.4, 0.5, 0.4],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-20 right-20 w-[450px] h-[450px] bg-purple-600/15 rounded-full blur-3xl"
+            animate={{
               scale: [1, 1.2, 1],
-              opacity: [0.4, 0.6, 0.4],
-              x: [0, 30, 0],
-              y: [0, 20, 0],
+              opacity: [0.4, 0.5, 0.4],
             }}
             transition={{
               duration: 10,
@@ -49,54 +60,16 @@ export default function Home() {
               ease: "easeInOut",
             }}
           />
-          <motion.div
-            className="absolute top-1/3 right-20 w-[450px] h-[450px] bg-indigo-600/15 rounded-full blur-3xl"
-            animate={{
-              scale: [1.1, 1, 1.1],
-              opacity: [0.5, 0.7, 0.5],
-              x: [0, -30, 0],
-              y: [0, 40, 0],
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-40 left-1/4 w-[400px] h-[400px] bg-purple-600/15 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.4, 0.6, 0.4],
-              x: [0, 40, 0],
-              y: [0, -30, 0],
-            }}
-            transition={{
-              duration: 14,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-1/3 w-[350px] h-[350px] bg-blue-500/15 rounded-full blur-3xl"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: [0.6, 0.4, 0.6],
-              x: [0, -40, 0],
-              y: [0, 30, 0],
-            }}
-            transition={{
-              duration: 11,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
         </div>
         
         <ScrollProgress />
-        <FloatingElements />
-        <ParticlesBackground />
         <Navigation />
+        {isLoaded && (
+          <>
+            <FloatingElements />
+            <ParticlesBackground />
+          </>
+        )}
         
         <motion.div
           initial={{ opacity: 0 }}

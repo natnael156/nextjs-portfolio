@@ -417,8 +417,13 @@ export default function Skills() {
                     <img 
                       src={skill.icon} 
                       alt={skill.name}
+                      loading="lazy"
                       className="w-20 h-20 object-contain"
                       style={{ filter: `drop-shadow(0 0 10px ${skill.color})` }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
                     />
                   ) : (
                     <span className="text-6xl" style={{ color: skill.color }}>

@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { ExternalLink, Github } from "lucide-react";
+import { getOptimizedImageUrl } from "@/lib/imageOptimization";
 
 // Default hardcoded projects
 const defaultProjects = [
@@ -134,11 +135,26 @@ export default function Projects() {
               className="glass rounded-3xl overflow-hidden group"
             >
               {/* Project Image */}
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-64 overflow-hidden bg-gray-800">
                 <img
-                  src={project.image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop'}
+                  src={project.image?.startsWith('/images/') 
+                    ? project.image 
+                    : getOptimizedImageUrl(
+                        project.image || '/images/projects/default.svg',
+                        800,
+                        75
+                      )
+                  }
                   alt={project.title}
+                  width={800}
+                  height={600}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = "/images/projects/default.svg";
+                  }}
                 />
                 <div 
                   className="absolute inset-0 opacity-50"
@@ -151,7 +167,12 @@ export default function Projects() {
               {/* Project Content */}
               <div className="p-6">
                 <h3 className="text-2xl font-bold mb-3">{project.title}</h3>
-                <p className="text-gray-400 mb-4 line-clamp-2">{project.description}</p>
+                <p className="text-gray-400 mb-2">{project.description}</p>
+                {project.longDescription && (
+                  <p className="text-gray-500 text-sm mb-4 leading-relaxed">
+                    {project.longDescription}
+                  </p>
+                )}
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
