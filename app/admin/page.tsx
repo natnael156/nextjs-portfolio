@@ -119,7 +119,7 @@ export default function AdminPanel() {
             </form>
 
             <p className="text-center text-sm text-gray-500 mt-6">
-              Default password: admin123
+              
             </p>
           </div>
         </motion.div>
