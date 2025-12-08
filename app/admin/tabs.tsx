@@ -541,20 +541,34 @@ export function SkillsTab() {
         <div className="glass p-4 rounded-xl">
           <p className="text-sm font-semibold mb-3 text-gray-400">Preview:</p>
           <div className="flex items-start gap-4">
-            <div
+            <motion.div
               className="w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0 p-3"
               style={{ backgroundColor: formData.color }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
               {formData.icon ? (
                 formData.icon.startsWith('http') ? (
-                  <img src={formData.icon} alt={formData.name} className="w-full h-full object-contain" />
+                  <motion.img 
+                    src={formData.icon} 
+                    alt={formData.name} 
+                    className="w-full h-full object-contain"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                  />
                 ) : (
-                  <span className="text-4xl">{formData.icon}</span>
+                  <motion.span 
+                    className="text-4xl"
+                    whileHover={{ rotate: 360 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    {formData.icon}
+                  </motion.span>
                 )
               ) : (
                 <span className="text-4xl">?</span>
               )}
-            </div>
+            </motion.div>
             <div className="flex-1">
               <p className="text-xl font-bold">{formData.name || "Skill Name"}</p>
               <p className="text-sm text-gray-400 mb-2">{formData.category || "Category"}</p>

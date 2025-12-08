@@ -399,38 +399,55 @@ export default function Skills() {
                   filter: hoveredSkill === index ? `drop-shadow(0 0 30px ${skill.color || '#3B82F6'})` : 'none',
                 }}
               >
-                <motion.div
-                  animate={hoveredSkill === index ? {
-                    rotate: [0, 10, -10, 0],
-                  } : {}}
-                  transition={{
-                    duration: 0.5,
-                    repeat: hoveredSkill === index ? Infinity : 0,
-                  }}
-                >
-                  {skill.Icon ? (
+                {skill.Icon ? (
+                  <motion.div
+                    animate={hoveredSkill === index ? {
+                      rotate: [0, 10, -10, 0],
+                    } : {}}
+                    transition={{
+                      duration: 0.5,
+                      repeat: hoveredSkill === index ? Infinity : 0,
+                    }}
+                  >
                     <skill.Icon 
                       size={80} 
                       style={{ color: skill.color }}
                     />
-                  ) : skill.icon && skill.icon.startsWith('http') ? (
-                    <img 
-                      src={skill.icon} 
-                      alt={skill.name}
-                      loading="lazy"
-                      className="w-20 h-20 object-contain"
-                      style={{ filter: `drop-shadow(0 0 10px ${skill.color})` }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <span className="text-6xl" style={{ color: skill.color }}>
-                      {skill.icon || skill.name.charAt(0)}
-                    </span>
-                  )}
-                </motion.div>
+                  </motion.div>
+                ) : skill.icon && skill.icon.startsWith('http') ? (
+                  <motion.img 
+                    src={skill.icon} 
+                    alt={skill.name}
+                    loading="lazy"
+                    className="w-20 h-20 object-contain"
+                    style={{ filter: `drop-shadow(0 0 10px ${skill.color})` }}
+                    animate={hoveredSkill === index ? {
+                      rotate: [0, 10, -10, 0],
+                    } : {}}
+                    transition={{
+                      duration: 0.5,
+                      repeat: hoveredSkill === index ? Infinity : 0,
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <motion.span 
+                    className="text-6xl" 
+                    style={{ color: skill.color }}
+                    animate={hoveredSkill === index ? {
+                      rotate: [0, 10, -10, 0],
+                    } : {}}
+                    transition={{
+                      duration: 0.5,
+                      repeat: hoveredSkill === index ? Infinity : 0,
+                    }}
+                  >
+                    {skill.icon || skill.name.charAt(0)}
+                  </motion.span>
+                )}
               </motion.div>
 
               {/* Name - appears on hover */}
@@ -510,7 +527,11 @@ export default function Skills() {
 
               {/* Close button */}
               <button
-                onClick={() => setSelectedSkill(null)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedSkill(null);
+                }}
+                aria-label="Close"
                 className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center glass rounded-full hover:bg-white/10 transition-colors z-10"
               >
                 ✕
@@ -519,9 +540,7 @@ export default function Skills() {
               {/* Content */}
               <div className="relative z-10">
                 <div className="flex items-center gap-6 mb-6">
-                  <motion.div
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  <div
                     className="w-24 h-24 rounded-3xl flex items-center justify-center shadow-2xl"
                     style={{ 
                       backgroundColor: allSkills[selectedSkill].color + '20',
@@ -530,18 +549,44 @@ export default function Skills() {
                   >
                     {(() => {
                       const SkillIcon = allSkills[selectedSkill].Icon;
-                      return SkillIcon ? (
-                        <SkillIcon 
-                          size={60} 
-                          style={{ color: allSkills[selectedSkill].color }}
-                        />
-                      ) : (
-                        <span className="text-6xl" style={{ color: allSkills[selectedSkill].color }}>
-                          {allSkills[selectedSkill].icon || allSkills[selectedSkill].name.charAt(0)}
-                        </span>
-                      );
+                      const skillIcon = allSkills[selectedSkill].icon;
+                      
+                      if (SkillIcon) {
+                        return (
+                          <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                          >
+                            <SkillIcon 
+                              size={60} 
+                              style={{ color: allSkills[selectedSkill].color }}
+                            />
+                          </motion.div>
+                        );
+                      } else if (skillIcon && skillIcon.startsWith('http')) {
+                        return (
+                          <motion.img
+                            src={skillIcon}
+                            alt={allSkills[selectedSkill].name}
+                            className="w-16 h-16 object-contain"
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                          />
+                        );
+                      } else {
+                        return (
+                          <motion.span 
+                            className="text-6xl" 
+                            style={{ color: allSkills[selectedSkill].color }}
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                          >
+                            {skillIcon || allSkills[selectedSkill].name.charAt(0)}
+                          </motion.span>
+                        );
+                      }
                     })()}
-                  </motion.div>
+                  </div>
                   <div className="flex-1">
                     <h3 className="text-4xl font-bold mb-2">{allSkills[selectedSkill].name}</h3>
                   </div>
