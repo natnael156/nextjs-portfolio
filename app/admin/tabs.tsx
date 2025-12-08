@@ -622,10 +622,18 @@ export function SkillsTab() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl shadow-lg"
+                      className="w-14 h-14 rounded-xl flex items-center justify-center text-3xl shadow-lg p-2"
                       style={{ backgroundColor: skill.color }}
                     >
-                      {skill.icon}
+                      {skill.icon && skill.icon.startsWith('http') ? (
+                        <img 
+                          src={skill.icon} 
+                          alt={skill.name} 
+                          className="w-full h-full object-contain"
+                        />
+                      ) : (
+                        <span className="text-3xl">{skill.icon}</span>
+                      )}
                     </div>
                     <div>
                       <h4 className="text-lg font-bold">{skill.name}</h4>
