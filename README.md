@@ -37,7 +37,7 @@ A stunning, fully-featured portfolio website built with Next.js 14, featuring 3D
 ## 🛠️ Tech Stack
 
 ### Core
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16.0 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Database**: MongoDB with Mongoose
