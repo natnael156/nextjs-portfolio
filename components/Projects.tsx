@@ -137,7 +137,7 @@ export default function Projects() {
               {/* Project Image */}
               <div className="relative h-64 overflow-hidden bg-gray-800">
                 <img
-                  src={project.image?.startsWith('/images/') 
+                  src={project.image?.startsWith('data:image/') || project.image?.startsWith('/images/') 
                     ? project.image 
                     : getOptimizedImageUrl(
                         project.image || '/images/projects/default.svg',

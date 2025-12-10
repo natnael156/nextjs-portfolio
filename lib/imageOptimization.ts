@@ -3,8 +3,13 @@
 export function getOptimizedImageUrl(url: string, width?: number, quality?: number): string {
   if (!url) return url;
   
-  // If it's a base64 image, return as is (already uploaded)
+  // If it's a base64 image, return as is (already optimized during upload)
   if (url.startsWith('data:image')) {
+    return url;
+  }
+  
+  // If it's a local image path, return as is (static files)
+  if (url.startsWith('/images/')) {
     return url;
   }
   

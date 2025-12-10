@@ -34,6 +34,11 @@ export function getImagePath(imagePath: string | undefined, type: 'profile' | 'p
       : '/images/projects/default.svg';
   }
   
+  // If it's a base64 data URL, return it as is
+  if (imagePath.startsWith('data:image/')) {
+    return imagePath;
+  }
+  
   // If it's already a full path, return it
   if (imagePath.startsWith('/') || imagePath.startsWith('http')) {
     return imagePath;
