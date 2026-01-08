@@ -206,7 +206,7 @@ function ProfileTab() {
     linkedin: "https://linkedin.com",
     heroTitle: "Full Stack",
     heroSubtitle: "Crafting exceptional digital experiences with modern web technologies",
-    heroAnimatedTexts: ["Developer", "UI/UX Designer", "Front-End Specialist"],
+    heroAnimatedTexts: ["Developer", "Web Interface Specialist", "Front-End Specialist"],
     availabilityText: "Available for Freelance",
     yearsExperience: 5,
     projectsCompleted: 50,
