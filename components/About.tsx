@@ -33,12 +33,12 @@ export default function About() {
     <section id="about" className="relative py-32 overflow-hidden">
       <div className="container mx-auto px-6 z-10" ref={ref}>
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
+          <h2 className="text-6xl md:text-8xl font-bold mb-6">
             About <span className="gradient-text">Me</span>
           </h2>
         </motion.div>
@@ -50,43 +50,54 @@ export default function About() {
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="relative flex justify-center lg:justify-end"
           >
             {/* Main image container with enhanced styling */}
             <motion.div
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.3 }}
-              className="relative rounded-3xl overflow-hidden shadow-2xl"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative rounded-3xl overflow-hidden shadow-2xl max-w-lg mx-auto"
               style={{
-                boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)",
+                boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05)",
               }}
             >
-              <div className="relative rounded-3xl overflow-hidden bg-gray-800 aspect-square">
-                <motion.img
-                  src={profile?.image || "/images/profile/default.svg"}
-                  alt="Profile"
-                  width={600}
-                  height={600}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/images/profile/default.svg";
-                  }}
-                />
+              <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800 via-gray-900 to-black aspect-square">
+                {profile?.image && (
+                  <motion.img
+                    src={profile.image}
+                    alt="Profile"
+                    width={600}
+                    height={600}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                )}
                 
-                {/* Multi-layer gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-600/30 via-purple-600/10 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-purple-600/20" />
+                {/* Enhanced gradient overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-600/20 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-purple-600/15" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-cyan-500/10" />
                 
-                {/* Shine effect on hover */}
+                {/* Professional border effect */}
+                <div className="absolute inset-0 rounded-3xl border border-white/10" />
+                
+                {/* Subtle shine effect on hover */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: "200%" }}
-                  transition={{ duration: 0.8 }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0"
+                  whileHover={{ 
+                    opacity: 1,
+                    x: ["-100%", "200%"],
+                  }}
+                  transition={{ 
+                    opacity: { duration: 0.3 },
+                    x: { duration: 1.2, ease: "easeInOut" }
+                  }}
                 />
               </div>
             </motion.div>
@@ -94,30 +105,79 @@ export default function About() {
             {/* Enhanced decorative elements */}
             <motion.div
               animate={{
-                scale: [1, 1.3, 1],
-                opacity: [0.2, 0.4, 0.2],
+                scale: [1, 1.2, 1],
+                opacity: [0.1, 0.3, 0.1],
                 rotate: [0, 180, 360],
               }}
               transition={{
-                duration: 8,
+                duration: 12,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute -top-16 -left-16 w-48 h-48 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full blur-3xl"
+              className="absolute -top-20 -left-20 w-64 h-64 bg-gradient-to-br from-blue-500/30 to-cyan-500/20 rounded-full blur-3xl"
             />
             <motion.div
               animate={{
-                scale: [1.2, 1, 1.2],
-                opacity: [0.3, 0.5, 0.3],
+                scale: [1.1, 1, 1.1],
+                opacity: [0.2, 0.4, 0.2],
                 rotate: [360, 180, 0],
               }}
               transition={{
-                duration: 10,
+                duration: 15,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute -bottom-16 -right-16 w-48 h-48 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-3xl"
+              className="absolute -bottom-20 -right-20 w-64 h-64 bg-gradient-to-br from-purple-500/30 to-pink-500/20 rounded-full blur-3xl"
             />
+            
+            {/* Professional floating elements */}
+            <motion.div
+              animate={{
+                y: [0, -15, 0],
+                opacity: [0.4, 0.8, 0.4],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute top-16 right-12 w-6 h-6 bg-blue-400/60 rounded-full blur-sm shadow-lg"
+            />
+            <motion.div
+              animate={{
+                y: [0, 15, 0],
+                opacity: [0.3, 0.7, 0.3],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1.5,
+              }}
+              className="absolute bottom-24 left-16 w-4 h-4 bg-purple-400/60 rounded-full blur-sm shadow-lg"
+            />
+            <motion.div
+              animate={{
+                y: [0, -10, 0],
+                x: [0, 5, 0],
+                opacity: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 3,
+              }}
+              className="absolute top-32 left-8 w-3 h-3 bg-cyan-400/70 rounded-full blur-sm shadow-lg"
+            />
+
+            {/* Professional corner accents */}
+            <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-blue-400/50 rounded-tl-lg"></div>
+            <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-purple-400/50 rounded-tr-lg"></div>
+            <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-cyan-400/50 rounded-bl-lg"></div>
+            <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-pink-400/50 rounded-br-lg"></div>
             
             {/* Additional floating particles */}
             <motion.div
@@ -152,52 +212,83 @@ export default function About() {
             initial={{ opacity: 0, x: 50 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="space-y-6"
+            className="space-y-8 flex flex-col justify-center"
           >
-            <h3 className="text-3xl md:text-4xl font-bold">
-              Hi, I&apos;m <span className="gradient-text">{profile?.name || 'Your Name'}</span>
-            </h3>
-            <p className="text-xl text-gray-300 leading-relaxed">
-              A passionate <span className="text-blue-400 font-semibold">{profile?.title || 'Front-End Developer'}</span> with 
-              expertise in building modern, responsive web applications that deliver exceptional user experiences.
-            </p>
-            <p className="text-lg text-gray-400 leading-relaxed whitespace-pre-line">
-              {profile?.aboutDescription || profile?.bio || 'I specialize in transforming complex problems into elegant, intuitive solutions. With a keen eye for design and a deep understanding of modern web technologies, I craft digital experiences that not only look beautiful but perform flawlessly. When I\'m not coding, you\'ll find me exploring new technologies, contributing to open-source projects, or sharing knowledge with the developer community.'}
-            </p>
+            <motion.h3 
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5 }}
+              className="text-3xl md:text-4xl font-bold leading-tight text-left"
+            >
+              Hi, I&apos;m <span className="gradient-text">{profile?.name}</span>
+            </motion.h3>
+            
+            {profile?.aboutDescription && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="space-y-6"
+              >
+                <div 
+                  className="text-xl text-gray-300 leading-relaxed text-left"
+                  dangerouslySetInnerHTML={{ 
+                    __html: profile.aboutDescription
+                      .split('\n')
+                      .filter(paragraph => paragraph.trim())
+                      .map(paragraph => `<p class="mb-6 text-xl text-gray-300 leading-relaxed">${paragraph.trim()}</p>`)
+                      .join('')
+                  }} 
+                />
+              </motion.div>
+            )}
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={isInView ? { opacity: 1 } : {}}
+              transition={{ delay: 0.9, duration: 0.8 }}
+              className="grid grid-cols-3 gap-6 pt-8"
+            >
               <motion.div
                 whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="text-center"
               >
-                <p className="text-4xl font-bold gradient-text">{profile?.yearsExperience || 5}+</p>
+                <p className="text-4xl font-bold gradient-text">{profile?.yearsExperience}+</p>
                 <p className="text-gray-400 text-sm mt-1">Years Experience</p>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="text-center"
               >
-                <p className="text-4xl font-bold gradient-text">{profile?.projectsCompleted || 50}+</p>
+                <p className="text-4xl font-bold gradient-text">{profile?.projectsCompleted}+</p>
                 <p className="text-gray-400 text-sm mt-1">Projects Completed</p>
               </motion.div>
               <motion.div
                 whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
                 className="text-center"
               >
-                <p className="text-4xl font-bold gradient-text">{profile?.happyClients || 30}+</p>
+                <p className="text-4xl font-bold gradient-text">{profile?.happyClients}+</p>
                 <p className="text-gray-400 text-sm mt-1">Happy Clients</p>
               </motion.div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 1.2, duration: 0.8 }}
+          className="grid md:grid-cols-3 gap-8"
+        >
           {features.map((feature, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.6 + index * 0.2 }}
               whileHover={{ scale: 1.05, y: -10 }}
@@ -217,7 +308,7 @@ export default function About() {
               <p className="text-gray-400 relative z-10">{feature.description}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

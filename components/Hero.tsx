@@ -58,11 +58,12 @@ export default function Hero() {
               <span className="gradient-text">{profile?.heroTitle || 'Full Stack'}</span>
               <br />
               <TypeAnimation
-                sequence={
-                  profile?.heroAnimatedTexts && profile.heroAnimatedTexts.length > 0
-                    ? profile.heroAnimatedTexts.flatMap((text: string) => [text, 2000])
-                    : ["Developer", 2000, "UI/UX Designer", 2000, "Front-End Specialist", 2000]
-                }
+                sequence={[
+                  "Front-End Specialist", 2000,
+                  "Web Developer", 2000, 
+                  "Web Interface Engineer", 2000,
+                  
+                ]}
                 wrapper="span"
                 speed={50}
                 className="text-white"

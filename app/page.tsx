@@ -93,7 +93,7 @@ export default function Home() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
             >
-              &copy; 2025 Natnael Tefera. Crafted with Next.js, Three.js & Framer Motion
+              &copy; 2025 Natnael Tefera. 
             </motion.p>
           </div>
         </footer>

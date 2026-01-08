@@ -11,7 +11,6 @@ import {
   SkillsTab, 
   ProjectsTab, 
   EducationTab, 
-  ContactTab,
   CertificationsTab,
   SettingsTab 
 } from "./tabs";
@@ -19,7 +18,7 @@ import {
 export default function AdminPanel() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState("skills");
+  const [activeTab, setActiveTab] = useState("profile");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -51,13 +50,12 @@ export default function AdminPanel() {
   };
 
   const tabs = [
-    { id: "skills", name: "Skills", icon: Code },
     { id: "profile", name: "Profile", icon: User },
+    { id: "skills", name: "Skills", icon: Code },
     { id: "experience", name: "Experience", icon: Briefcase },
     { id: "education", name: "Education", icon: Award },
     { id: "certifications", name: "Certifications", icon: Award },
     { id: "projects", name: "Projects", icon: FolderOpen },
-    { id: "contact", name: "Contact", icon: Mail },
     { id: "settings", name: "Settings", icon: Settings },
   ];
 
@@ -176,13 +174,12 @@ export default function AdminPanel() {
           {/* Content Area */}
           <div className="lg:col-span-4">
             <div className="glass p-8 rounded-3xl">
-              {activeTab === "skills" && <SkillsTab />}
               {activeTab === "profile" && <ProfileTab />}
+              {activeTab === "skills" && <SkillsTab />}
               {activeTab === "experience" && <ExperienceTab />}
               {activeTab === "education" && <EducationTab />}
               {activeTab === "certifications" && <CertificationsTab />}
               {activeTab === "projects" && <ProjectsTab />}
-              {activeTab === "contact" && <ContactTab />}
               {activeTab === "settings" && <SettingsTab />}
             </div>
           </div>
@@ -291,6 +288,7 @@ function ProfileTab() {
   const handleSave = async () => {
     setLoading(true);
     console.log('Saving profile data:', formData);
+    console.log('heroAnimatedTexts being saved:', formData.heroAnimatedTexts);
     try {
       const response = await fetch('/api/profile', {
         method: 'PUT',
@@ -340,26 +338,6 @@ function ProfileTab() {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-semibold mb-2 text-gray-300">Job Title</label>
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-semibold mb-2 text-gray-300">Bio</label>
-          <textarea
-            value={formData.bio}
-            onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-            rows={4}
-            className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white resize-none"
           />
         </div>
 
@@ -422,18 +400,6 @@ function ProfileTab() {
               className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white resize-none"
             />
             <p className="text-xs text-gray-500 mt-1">The description text below the animated words</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold mb-2 text-gray-300">Animated Words (comma-separated)</label>
-            <input
-              type="text"
-              value={formData.heroAnimatedTexts.join(", ")}
-              onChange={(e) => setFormData({ ...formData, heroAnimatedTexts: e.target.value.split(",").map(s => s.trim()) })}
-              placeholder="Developer, UI/UX Designer, Front-End Specialist"
-              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 transition-all text-white"
-            />
-            <p className="text-xs text-gray-500 mt-1">Words that rotate/animate below the main title (separate with commas)</p>
           </div>
 
           <div>

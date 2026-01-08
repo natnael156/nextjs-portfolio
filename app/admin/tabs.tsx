@@ -1129,20 +1129,6 @@ export function EducationTab() {
   );
 }
 
-// Contact Tab (uses Profile data)
-export function ContactTab() {
-  return (
-    <div className="text-center py-12">
-      <h3 className="text-2xl font-bold text-gray-400">
-        Contact information is managed in the Profile tab
-      </h3>
-      <p className="text-gray-500 mt-4">
-        Go to Profile tab to update email, phone, and location
-      </p>
-    </div>
-  );
-}
-
 // Certifications Tab
 export function CertificationsTab() {
   const [certifications, setCertifications] = useState<any[]>([]);
