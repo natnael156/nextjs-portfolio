@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   keywords: ["Front-End Developer", "React Developer", "Next.js", "Web Developer", "Portfolio", "JavaScript", "TypeScript"],
   authors: [{ name: "Natnael Tefera" }],
   creator: "Natnael Tefera",
+  icons: {
+    icon: [
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
