@@ -1566,6 +1566,73 @@ export function PricingTab() {
     order: 0,
   });
 
+  // Configurator prices
+  const [configPrices, setConfigPrices] = useState<Record<string, number>>({});
+  const [configSaving, setConfigSaving] = useState(false);
+
+  const configuratorItems = [
+    { key: "landing",         label: "Landing Page (base)" },
+    { key: "portfolio",       label: "Portfolio (base)" },
+    { key: "ecommerce",       label: "E-Commerce (base)" },
+    { key: "webapp",          label: "Web App (base)" },
+    { key: "mobile",          label: "Mobile App (base)" },
+    { key: "blog",            label: "Blog / CMS (base)" },
+    { key: "feat_auth",       label: "+ User Auth / Login" },
+    { key: "feat_db",         label: "+ Database & API" },
+    { key: "feat_payment",    label: "+ Payment Integration" },
+    { key: "feat_seo",        label: "+ SEO Optimization" },
+    { key: "feat_analytics",  label: "+ Analytics Dashboard" },
+    { key: "feat_email",      label: "+ Email Automation" },
+    { key: "feat_animations", label: "+ Custom Animations" },
+    { key: "feat_cms",        label: "+ Admin / CMS Panel" },
+    { key: "feat_realtime",   label: "+ Real-time Features" },
+    { key: "feat_chat",       label: "+ Live Chat / Support" },
+  ];
+
+  const defaults: Record<string, number> = {
+    landing: 300, portfolio: 400, ecommerce: 1200, webapp: 1500, mobile: 2000, blog: 600,
+    feat_auth: 300, feat_db: 400, feat_payment: 350, feat_seo: 200, feat_analytics: 250,
+    feat_email: 200, feat_animations: 300, feat_cms: 350, feat_realtime: 400, feat_chat: 250,
+  };
+
+  useEffect(() => {
+    loadPlans();
+    loadConfigPrices();
+  }, []);
+
+  const loadConfigPrices = async () => {
+    try {
+      const res = await fetch('/api/pricing-config');
+      const data = await res.json();
+      if (data.success) setConfigPrices(data.data);
+    } catch (err) {
+      console.error('Error loading config prices:', err);
+    }
+  };
+
+  const handleConfigSave = async () => {
+    setConfigSaving(true);
+    try {
+      const updates = configuratorItems.map(item => ({
+        key: item.key,
+        price: configPrices[item.key] ?? defaults[item.key],
+        label: item.label,
+      }));
+      const res = await fetch('/api/pricing-config', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      const data = await res.json();
+      if (data.success) alert('Prices updated! ✅');
+      else alert('Error: ' + data.error);
+    } catch (err) {
+      alert('Error: ' + err);
+    } finally {
+      setConfigSaving(false);
+    }
+  };
+
   useEffect(() => {
     loadPlans();
   }, []);
@@ -1645,11 +1712,51 @@ export function PricingTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-3xl font-bold">Pricing Plans</h2>
+        <h2 className="text-3xl font-bold">Pricing Configuration</h2>
         <div className="glass px-4 py-2 rounded-xl">
           <p className="text-sm text-gray-400">
             <span className="text-blue-400 font-bold">{plans.length}</span> plans
           </p>
+        </div>
+      </div>
+
+      {/* ── Configurator Prices ── */}
+      <div className="glass p-6 rounded-2xl space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xl font-bold">Project Configurator Prices</h3>
+            <p className="text-sm text-gray-400 mt-1">Edit the prices shown in the interactive price builder on your site</p>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleConfigSave}
+            disabled={configSaving}
+            className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-semibold text-sm disabled:opacity-50"
+          >
+            <Save size={16} />
+            {configSaving ? 'Saving...' : 'Save All Prices'}
+          </motion.button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-3 mt-4">
+          {configuratorItems.map((item) => (
+            <div key={item.key} className="flex items-center gap-3 bg-white/3 border border-white/8 rounded-xl px-4 py-3">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-300">{item.label}</p>
+                <p className="text-xs text-gray-600">default: ${defaults[item.key]}</p>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-gray-500 text-sm">$</span>
+                <input
+                  type="number"
+                  value={configPrices[item.key] ?? defaults[item.key]}
+                  onChange={(e) => setConfigPrices(prev => ({ ...prev, [item.key]: parseInt(e.target.value) || 0 }))}
+                  className="w-24 px-3 py-2 bg-white/5 border border-gray-700 rounded-lg text-white text-sm font-bold focus:outline-none focus:border-blue-500 text-right"
+                />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
