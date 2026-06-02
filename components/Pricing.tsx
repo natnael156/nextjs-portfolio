@@ -146,18 +146,29 @@ export default function Pricing() {
   const [note, setNote] = useState("");
 
   // editable prices loaded from admin API
-  const [customPrices, setCustomPrices] = useState<Record<string, number>>({});
+  const [customPrices, setCustomPrices] = useState<Record<string, { usd: number; etb: number }>>({});
   // currency
   const [currency, setCurrency] = useState<"usd" | "etb">("usd");
-  const ETB_RATE = customPrices["etb_rate"] ?? 57; // 1 USD = X ETB, editable in admin
 
-  const fmt = (usdAmount: number) => {
-    if (currency === "etb") {
-      const etb = Math.round(usdAmount * ETB_RATE);
-      return `ETB ${etb.toLocaleString()}`;
-    }
-    return `$${usdAmount.toLocaleString()}`;
+  const defaultsUSD: Record<string, number> = {
+    landing: 300, portfolio: 400, ecommerce: 1200, webapp: 1500, mobile: 2000, blog: 600,
+    feat_auth: 300, feat_db: 400, feat_payment: 350, feat_seo: 200, feat_analytics: 250,
+    feat_email: 200, feat_animations: 300, feat_cms: 350, feat_realtime: 400, feat_chat: 250,
   };
+  const defaultsETB: Record<string, number> = {
+    landing: 17100, portfolio: 22800, ecommerce: 68400, webapp: 85500, mobile: 114000, blog: 34200,
+    feat_auth: 17100, feat_db: 22800, feat_payment: 19950, feat_seo: 11400, feat_analytics: 14250,
+    feat_email: 11400, feat_animations: 17100, feat_cms: 19950, feat_realtime: 22800, feat_chat: 14250,
+  };
+  const getPrice = (id: string, fallback: number): number => {
+    const cfg = customPrices[id];
+    if (currency === "etb") return cfg?.etb ?? defaultsETB[id] ?? Math.round(fallback * 57);
+    return cfg?.usd ?? fallback;
+  };
+  const fmt = (amount: number) =>
+    currency === "etb" ? `ETB ${amount.toLocaleString()}` : `$${amount.toLocaleString()}`;
+
+
 
   useEffect(() => {
     fetch("/api/pricing-config")
@@ -166,7 +177,6 @@ export default function Pricing() {
       .catch(() => {});
   }, []);
 
-  const getBase = (id: string, fallback: number) => customPrices[id] ?? fallback;
 
   const toggleFeature = (id: string) => {
     setSelectedFeatures((prev) =>
@@ -175,15 +185,33 @@ export default function Pricing() {
   };
 
   const basePrice = projectTypes.find((p) => p.id === projectType)
-    ? getBase(projectType!, projectTypes.find(p => p.id === projectType)!.base)
+    ? getPrice(projectType!, projectTypes.find(p => p.id === projectType)!.base)
     : 0;
   const pagesAdd = pageOptions.find((p) => p.id === pages)?.add ?? 0;
   const featuresAdd = selectedFeatures.reduce((sum, id) => {
     const feat = featuresList.find((f) => f.id === id);
-    return sum + (feat ? getBase(`feat_${id}`, feat.price) : 0);
+    return sum + (feat ? getPrice(`feat_${id}`, feat.price) : 0);
   }, 0);
   const multiplier = timelines.find((t) => t.id === timeline)?.multiplier ?? 1;
   const total = Math.round((basePrice + pagesAdd + featuresAdd) * multiplier);
+
+  // Compute both currencies for the quote summary
+  const basePriceUSD = projectTypes.find(p => p.id === projectType)
+    ? (customPrices[projectType!]?.usd ?? defaultsUSD[projectType!] ?? projectTypes.find(p => p.id === projectType)!.base) : 0;
+  const basePriceETB = projectTypes.find(p => p.id === projectType)
+    ? (customPrices[projectType!]?.etb ?? defaultsETB[projectType!] ?? 0) : 0;
+  const pagesAddUSD = pageOptions.find(p => p.id === pages)?.add ?? 0;
+  const pagesAddETB = Math.round(pagesAddUSD * 57);
+  const featuresAddUSD = selectedFeatures.reduce((sum, id) => {
+    const feat = featuresList.find(f => f.id === id);
+    return sum + (feat ? (customPrices[`feat_${id}`]?.usd ?? feat.price) : 0);
+  }, 0);
+  const featuresAddETB = selectedFeatures.reduce((sum, id) => {
+    const feat = featuresList.find(f => f.id === id);
+    return sum + (feat ? (customPrices[`feat_${id}`]?.etb ?? defaultsETB[`feat_${id}`] ?? 0) : 0);
+  }, 0);
+  const totalUSD = Math.round((basePriceUSD + pagesAddUSD + featuresAddUSD) * multiplier);
+  const totalETB = Math.round((basePriceETB + pagesAddETB + featuresAddETB) * multiplier);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -198,7 +226,7 @@ export default function Pricing() {
       ? timelines.find(t => t.id === timeline)?.labelEn
       : timelines.find(t => t.id === timeline)?.labelAm;
 
-    const message = `Project Quote Request:\n\nProject Type: ${ptLabel}\nPages: ${pages}\nFeatures: ${featLabels || "None"}\nTimeline: ${tlLabel}\nEstimated Budget: $${total.toLocaleString()} USD / ETB ${Math.round(total * ETB_RATE).toLocaleString()}\n\nNote: ${note}`;
+    const message = `Project Quote Request:\n\nProject Type: ${ptLabel}\nPages: ${pages}\nFeatures: ${featLabels || "None"}\nTimeline: ${tlLabel}\nEstimated Budget: ${totalUSD.toLocaleString()} USD / ETB ${totalETB.toLocaleString()}\n\nNote: ${note}`;
     try {
       await fetch(`https://formspree.io/f/movzdlrb`, {
         method: "POST",
@@ -305,7 +333,7 @@ export default function Pricing() {
                     {projectTypes.map((pt) => {
                       const Icon = pt.icon;
                       const sel = projectType === pt.id;
-                      const price = getBase(pt.id, pt.base);
+                      const price = getPrice(pt.id, pt.base);
                       return (
                         <motion.button key={pt.id} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                           onClick={() => setProjectType(pt.id)}
@@ -349,7 +377,7 @@ export default function Pricing() {
                       {featuresList.map((feat) => {
                         const Icon = feat.icon;
                         const on = selectedFeatures.includes(feat.id);
-                        const price = getBase(`feat_${feat.id}`, feat.price);
+                        const price = getPrice(`feat_${feat.id}`, feat.price);
                         return (
                           <motion.button key={feat.id} whileTap={{ scale: 0.97 }} onClick={() => toggleFeature(feat.id)}
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-all ${on ? "border-purple-500 bg-purple-500/10" : "border-white/8 bg-white/3 hover:border-white/20"}`}>
@@ -415,13 +443,12 @@ export default function Pricing() {
                         <div className="border-t border-white/8 pt-3 flex justify-between items-center">
                           <span className="font-bold text-white">{tr.estimatedTotal}</span>
                           <div className="text-right">
-                            <span className="text-2xl font-black gradient-text">{fmt(total)}</span>
-                            {currency === "usd" && (
-                              <p className="text-xs text-gray-500 mt-0.5">≈ ETB {Math.round(total * ETB_RATE).toLocaleString()}</p>
-                            )}
-                            {currency === "etb" && (
-                              <p className="text-xs text-gray-500 mt-0.5">≈ ${total.toLocaleString()} USD</p>
-                            )}
+                            <span className="text-2xl font-black gradient-text">{fmt(currency === "usd" ? totalUSD : totalETB)}</span>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {currency === "usd"
+                                ? `≈ ETB ${totalETB.toLocaleString()}`
+                                : `≈ $${totalUSD.toLocaleString()} USD`}
+                            </p>
                           </div>
                         </div>
                       </div>
