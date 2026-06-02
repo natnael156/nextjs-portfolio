@@ -11,10 +11,10 @@ import Resume from "@/components/Resume";
 import Contact from "@/components/Contact";
 import Navigation from "@/components/Navigation";
 import ParticlesBackground from "@/components/ParticlesBackground";
-
 import ScrollProgress from "@/components/ScrollProgress";
 import FloatingElements from "@/components/FloatingElements";
 import LoadingScreen from "@/components/LoadingScreen";
+import ChatBot from "@/components/ChatBot";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -100,6 +100,8 @@ export default function Home() {
           </div>
         </footer>
       </main>
+
+      <ChatBot />
     </>
   );
 }
