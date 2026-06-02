@@ -1620,7 +1620,8 @@ export function PricingTab() {
     try {
       const updates = configuratorItems.map(item => ({
         key: item.key,
-        price: configPrices[item.key] ?? defaults[item.key],
+        usd: configPrices[item.key]?.usd ?? defaultsUSD[item.key],
+        etb: configPrices[item.key]?.etb ?? defaultsETB[item.key],
         label: item.label,
       }));
       const res = await fetch('/api/pricing-config', {
