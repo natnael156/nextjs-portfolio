@@ -6,29 +6,34 @@ import { ProfileProvider } from "@/lib/ProfileContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Natnael Tefera | Front-End Developer Portfolio",
-  description: "Professional front-end developer specializing in React, Next.js, and modern web technologies. View my projects, skills, and experience.",
+  title: {
+    default: "Natnael Tefera — Front-End Developer",
+    template: "%s | Natnael Tefera",
+  },
+  description: "Front-end developer specializing in React, Next.js, and modern web technologies. Building fast, beautiful, and accessible web experiences.",
   keywords: ["Front-End Developer", "React Developer", "Next.js", "Web Developer", "Portfolio", "JavaScript", "TypeScript"],
   authors: [{ name: "Natnael Tefera" }],
   creator: "Natnael Tefera",
   icons: {
     icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
       { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+    shortcut: '/favicon.svg',
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    title: "Natnael Tefera | Front-End Developer",
-    description: "Professional front-end developer portfolio showcasing modern web applications",
-    siteName: "Natnael Tefera Portfolio",
+    title: "Natnael Tefera — Front-End Developer",
+    description: "Building fast, beautiful, and accessible web experiences with React and Next.js.",
+    siteName: "Natnael Tefera",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Natnael Tefera | Front-End Developer",
-    description: "Professional front-end developer portfolio",
+    title: "Natnael Tefera — Front-End Developer",
+    description: "Building fast, beautiful, and accessible web experiences.",
   },
   robots: {
     index: true,
@@ -40,6 +45,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+    { media: "(prefers-color-scheme: light)", color: "#0f172a" },
+  ],
 };
 
 export default function RootLayout({
@@ -50,9 +59,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Preconnect to external domains for faster loading */}
-        <link rel="preconnect" href="https://images.unsplash.com" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
       </head>
