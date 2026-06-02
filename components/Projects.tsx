@@ -209,6 +209,7 @@ function ProjectCard({
   isInView: boolean;
 }) {
   const [imgError, setImgError] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const useNextImage = !imgError && isSafeImageUrl(project.image);
 
   return (
@@ -216,10 +217,10 @@ function ProjectCard({
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: Math.min(index * 0.08, 0.4) }}
-      whileHover={{ y: -8 }}
-      className="glass rounded-3xl overflow-hidden group"
+      className="glass rounded-3xl overflow-hidden group cursor-pointer"
+      onClick={() => setExpanded(!expanded)}
     >
-      {/* Image */}
+      {/* Image with overlay that shows on hover/expand */}
       <div className="relative h-48 overflow-hidden bg-gray-800/60">
         {useNextImage ? (
           <Image
@@ -227,7 +228,7 @@ function ProjectCard({
             alt={project.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className={`object-cover transition-transform duration-500 ${expanded ? "scale-105" : "group-hover:scale-105"}`}
             loading={index < 3 ? "eager" : "lazy"}
             onError={() => setImgError(true)}
           />
@@ -235,58 +236,98 @@ function ProjectCard({
           <img
             src={imgError || !project.image ? "/images/projects/default.svg" : project.image}
             alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className={`w-full h-full object-cover transition-transform duration-500 ${expanded ? "scale-105" : "group-hover:scale-105"}`}
             loading={index < 3 ? "eager" : "lazy"}
             decoding="async"
             onError={() => setImgError(true)}
           />
         )}
+
         {/* Colour overlay */}
         <div
           className="absolute inset-0 opacity-40 pointer-events-none"
           style={{ background: `linear-gradient(135deg, ${project.color || "#3B82F6"}, transparent)` }}
         />
-      </div>
 
-      {/* Content */}
-      <div className="p-5">
-        <h3 className="text-xl font-bold mb-2 line-clamp-1">{project.title}</h3>
-        <p className="text-gray-400 text-sm mb-1 line-clamp-2">{project.description}</p>
-
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1.5 my-3">
-          {project.tags?.slice(0, 4).map((tag: string, i: number) => (
-            <span key={i} className="px-2.5 py-0.5 bg-white/5 rounded-full text-xs text-gray-300">
+        {/* Tags float over the image */}
+        <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+          {project.tags?.slice(0, 3).map((tag: string, i: number) => (
+            <span key={i} className="px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full text-xs text-white border border-white/10">
               {tag}
             </span>
           ))}
+          {project.tags?.length > 3 && (
+            <span className="px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full text-xs text-white border border-white/10">
+              +{project.tags.length - 3}
+            </span>
+          )}
         </div>
 
-        {/* Links */}
-        <div className="flex gap-3 mt-3">
-          <motion.a
-            href={project.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors text-sm"
-          >
-            <Github size={15} />
-            Code
-          </motion.a>
-          <motion.a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-sm"
-          >
-            <ExternalLink size={15} />
-            Demo
-          </motion.a>
+        {/* Tap hint */}
+        <div className={`absolute top-3 right-3 transition-opacity duration-300 ${expanded ? "opacity-0" : "opacity-0 group-hover:opacity-100"}`}>
+          <span className="px-2 py-1 bg-black/60 backdrop-blur-sm rounded-lg text-xs text-gray-300">
+            tap for details
+          </span>
         </div>
+      </div>
+
+      {/* Always-visible content */}
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-2 mb-1">
+          <h3 className="text-lg font-bold line-clamp-1">{project.title}</h3>
+          <motion.div
+            animate={{ rotate: expanded ? 180 : 0 }}
+            transition={{ duration: 0.25 }}
+            className="flex-shrink-0 w-6 h-6 rounded-full bg-white/8 flex items-center justify-center mt-0.5"
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400" />
+            </svg>
+          </motion.div>
+        </div>
+        <p className="text-gray-400 text-sm line-clamp-2">{project.description}</p>
+
+        {/* Expandable details */}
+        <motion.div
+          initial={false}
+          animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="overflow-hidden"
+        >
+          <div className="pt-3 space-y-3">
+            {project.longDescription && (
+              <p className="text-gray-500 text-xs leading-relaxed border-t border-white/5 pt-3">
+                {project.longDescription}
+              </p>
+            )}
+
+            {/* Links */}
+            <div className="flex gap-3 pt-1" onClick={e => e.stopPropagation()}>
+              <motion.a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors text-sm"
+              >
+                <Github size={14} />
+                Code
+              </motion.a>
+              <motion.a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-sm"
+              >
+                <ExternalLink size={14} />
+                Demo
+              </motion.a>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </motion.div>
   );
