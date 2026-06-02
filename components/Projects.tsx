@@ -198,7 +198,38 @@ export default function Projects() {
   );
 }
 
-// ── Individual card extracted for clarity ─────────────────────────
+// ── Tech tag colours ─────────────────────────────────────────────
+const tagColors: Record<string, { bg: string; text: string; dot: string }> = {
+  "react":        { bg: "bg-cyan-500/10",    text: "text-cyan-300",   dot: "bg-cyan-400" },
+  "next.js":      { bg: "bg-white/10",       text: "text-white",      dot: "bg-white" },
+  "nextjs":       { bg: "bg-white/10",       text: "text-white",      dot: "bg-white" },
+  "typescript":   { bg: "bg-blue-500/10",    text: "text-blue-300",   dot: "bg-blue-400" },
+  "javascript":   { bg: "bg-yellow-500/10",  text: "text-yellow-300", dot: "bg-yellow-400" },
+  "tailwind":     { bg: "bg-teal-500/10",    text: "text-teal-300",   dot: "bg-teal-400" },
+  "tailwind css": { bg: "bg-teal-500/10",    text: "text-teal-300",   dot: "bg-teal-400" },
+  "node.js":      { bg: "bg-green-500/10",   text: "text-green-300",  dot: "bg-green-400" },
+  "python":       { bg: "bg-blue-400/10",    text: "text-blue-200",   dot: "bg-blue-300" },
+  "mongodb":      { bg: "bg-green-600/10",   text: "text-green-400",  dot: "bg-green-500" },
+  "postgresql":   { bg: "bg-indigo-500/10",  text: "text-indigo-300", dot: "bg-indigo-400" },
+  "firebase":     { bg: "bg-orange-500/10",  text: "text-orange-300", dot: "bg-orange-400" },
+  "stripe":       { bg: "bg-purple-500/10",  text: "text-purple-300", dot: "bg-purple-400" },
+  "vue.js":       { bg: "bg-emerald-500/10", text: "text-emerald-300",dot: "bg-emerald-400" },
+  "graphql":      { bg: "bg-pink-500/10",    text: "text-pink-300",   dot: "bg-pink-400" },
+  "docker":       { bg: "bg-sky-500/10",     text: "text-sky-300",    dot: "bg-sky-400" },
+  "d3.js":        { bg: "bg-orange-400/10",  text: "text-orange-200", dot: "bg-orange-300" },
+  "framer motion":{ bg: "bg-violet-500/10",  text: "text-violet-300", dot: "bg-violet-400" },
+  "react native": { bg: "bg-cyan-600/10",    text: "text-cyan-400",   dot: "bg-cyan-500" },
+  "sass":         { bg: "bg-pink-600/10",    text: "text-pink-400",   dot: "bg-pink-500" },
+  "redis":        { bg: "bg-red-500/10",     text: "text-red-300",    dot: "bg-red-400" },
+  "aws":          { bg: "bg-yellow-600/10",  text: "text-yellow-400", dot: "bg-yellow-500" },
+};
+
+function getTagStyle(tag: string) {
+  const key = tag.toLowerCase();
+  return tagColors[key] || { bg: "bg-white/5", text: "text-gray-300", dot: "bg-gray-500" };
+}
+
+// ── Individual card ───────────────────────────────────────────────
 function ProjectCard({
   project,
   index,
@@ -211,24 +242,38 @@ function ProjectCard({
   const [imgError, setImgError] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const useNextImage = !imgError && isSafeImageUrl(project.image);
+  const accent = project.color || "#3B82F6";
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.4, delay: Math.min(index * 0.08, 0.4) }}
-      className="glass rounded-3xl overflow-hidden group cursor-pointer"
       onClick={() => setExpanded(!expanded)}
+      className="group cursor-pointer rounded-3xl overflow-hidden relative"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        backdropFilter: "blur(12px)",
+        border: expanded
+          ? `1px solid ${accent}55`
+          : "1px solid rgba(255,255,255,0.07)",
+        boxShadow: expanded
+          ? `0 0 40px ${accent}22, 0 8px 32px rgba(0,0,0,0.4)`
+          : "0 8px 32px rgba(0,0,0,0.3)",
+        transition: "border 0.3s, box-shadow 0.3s",
+      }}
     >
-      {/* Image with overlay that shows on hover/expand */}
-      <div className="relative h-48 overflow-hidden bg-gray-800/60">
+      {/* ── Image ───────────────────────────────────────────── */}
+      <div className="relative h-52 overflow-hidden bg-gray-900">
         {useNextImage ? (
           <Image
             src={project.image}
             alt={project.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className={`object-cover transition-transform duration-500 ${expanded ? "scale-105" : "group-hover:scale-105"}`}
+            className={`object-cover transition-transform duration-700 ${
+              expanded ? "scale-110" : "group-hover:scale-105"
+            }`}
             loading={index < 3 ? "eager" : "lazy"}
             onError={() => setImgError(true)}
           />
@@ -236,89 +281,128 @@ function ProjectCard({
           <img
             src={imgError || !project.image ? "/images/projects/default.svg" : project.image}
             alt={project.title}
-            className={`w-full h-full object-cover transition-transform duration-500 ${expanded ? "scale-105" : "group-hover:scale-105"}`}
+            className={`w-full h-full object-cover transition-transform duration-700 ${
+              expanded ? "scale-110" : "group-hover:scale-105"
+            }`}
             loading={index < 3 ? "eager" : "lazy"}
             decoding="async"
             onError={() => setImgError(true)}
           />
         )}
 
-        {/* Colour overlay */}
+        {/* Bottom gradient fade */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-80" />
+
+        {/* Accent colour tint */}
         <div
-          className="absolute inset-0 opacity-40 pointer-events-none"
-          style={{ background: `linear-gradient(135deg, ${project.color || "#3B82F6"}, transparent)` }}
+          className="absolute inset-0 opacity-30 mix-blend-color"
+          style={{ background: `radial-gradient(circle at 30% 70%, ${accent}, transparent 70%)` }}
         />
 
-        {/* Tags float over the image */}
-        <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-          {project.tags?.map((tag: string, i: number) => (
-            <span key={i} className="px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full text-xs text-white border border-white/10">
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Tap hint */}
-        <div className={`absolute top-3 right-3 transition-opacity duration-300 ${expanded ? "opacity-0" : "opacity-0 group-hover:opacity-100"}`}>
-          <span className="px-2 py-1 bg-black/60 backdrop-blur-sm rounded-lg text-xs text-gray-300">
-            tap for details
+        {/* Index number badge */}
+        <div className="absolute top-3 left-3">
+          <span
+            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black text-white shadow-lg"
+            style={{ background: accent }}
+          >
+            {String(index + 1).padStart(2, "0")}
           </span>
         </div>
+
+        {/* Expand hint */}
+        <motion.div
+          animate={{ opacity: expanded ? 0 : 1 }}
+          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        >
+          <span className="px-2.5 py-1 bg-black/60 backdrop-blur-md rounded-lg text-xs text-gray-300 border border-white/10">
+            tap to expand
+          </span>
+        </motion.div>
       </div>
 
-      {/* Always-visible content */}
+      {/* ── Body ────────────────────────────────────────────── */}
       <div className="p-5">
-        <div className="flex items-start justify-between gap-2 mb-1">
-          <h3 className="text-lg font-bold line-clamp-1">{project.title}</h3>
+        {/* Title row */}
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <h3 className="text-lg font-bold text-white leading-tight">{project.title}</h3>
           <motion.div
-            animate={{ rotate: expanded ? 180 : 0 }}
+            animate={{ rotate: expanded ? 45 : 0 }}
             transition={{ duration: 0.25 }}
-            className="flex-shrink-0 w-6 h-6 rounded-full bg-white/8 flex items-center justify-center mt-0.5"
+            className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center border border-white/10 bg-white/5"
+            style={{ borderColor: expanded ? `${accent}66` : undefined }}
           >
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400" />
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+              <path d="M5.5 1v9M1 5.5h9" stroke={expanded ? accent : "#9ca3af"} strokeWidth="1.8" strokeLinecap="round" />
             </svg>
           </motion.div>
         </div>
-        <p className="text-gray-400 text-sm line-clamp-2">{project.description}</p>
 
-        {/* Expandable details */}
+        {/* Short description — always visible */}
+        <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-3">
+          {project.description}
+        </p>
+
+        {/* ── Tech tags — ALL shown with colour coding ────── */}
+        <div className="flex flex-wrap gap-1.5 mb-1">
+          {project.tags?.map((tag: string, i: number) => {
+            const style = getTagStyle(tag);
+            return (
+              <span
+                key={i}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${style.bg} ${style.text} border border-white/5`}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${style.dot}`} />
+                {tag}
+              </span>
+            );
+          })}
+        </div>
+
+        {/* ── Expandable section ──────────────────────────── */}
         <motion.div
           initial={false}
           animate={{ height: expanded ? "auto" : 0, opacity: expanded ? 1 : 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
           className="overflow-hidden"
         >
-          <div className="pt-3 space-y-3">
+          <div className="pt-4 space-y-4">
+            {/* Divider */}
+            <div className="h-px w-full" style={{ background: `linear-gradient(90deg, ${accent}44, transparent)` }} />
+
+            {/* Long description */}
             {project.longDescription && (
-              <p className="text-gray-500 text-xs leading-relaxed border-t border-white/5 pt-3">
+              <p className="text-gray-400 text-sm leading-relaxed">
                 {project.longDescription}
               </p>
             )}
 
-            {/* Links */}
-            <div className="flex gap-3 pt-1" onClick={e => e.stopPropagation()}>
+            {/* Action buttons */}
+            <div className="flex gap-3" onClick={e => e.stopPropagation()}>
               <motion.a
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -1 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl transition-colors text-sm"
+                className="flex items-center gap-2 px-4 py-2.5 bg-white/6 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl text-sm text-gray-200 font-medium transition-all"
               >
-                <Github size={14} />
-                Code
+                <Github size={15} />
+                View Code
               </motion.a>
               <motion.a
                 href={project.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -1 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl text-sm"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-white shadow-lg transition-all"
+                style={{
+                  background: `linear-gradient(135deg, ${accent}, ${accent}99)`,
+                  boxShadow: `0 4px 15px ${accent}33`,
+                }}
               >
-                <ExternalLink size={14} />
-                Demo
+                <ExternalLink size={15} />
+                Live Demo
               </motion.a>
             </div>
           </div>
