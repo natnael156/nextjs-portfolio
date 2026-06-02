@@ -2,13 +2,19 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Project from '@/models/Project';
 
-export const dynamic = 'force-dynamic';
+// Cache for 60s on CDN, revalidate in background (stale-while-revalidate)
+export const revalidate = 60;
 
 export async function GET() {
   try {
     await connectDB();
     const projects = await Project.find().sort({ order: 1 });
-    return NextResponse.json({ success: true, data: projects });
+    const response = NextResponse.json({ success: true, data: projects });
+    response.headers.set(
+      'Cache-Control',
+      'public, s-maxage=60, stale-while-revalidate=300'
+    );
+    return response;
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'An error occurred';
     return NextResponse.json({ success: false, error: errorMessage }, { status: 500 });
