@@ -50,12 +50,12 @@ const t = {
     basePrice: "Base price",
   },
   am: {
-    badge: "ፕሮጀክትዎን ይፍጠሩ",
-    title: "ፍጹም",
-    titleGradient: "ፕሮጀክትዎን ይፍጠሩ",
+    badge: "ፕሮጀክትዎን ይስሩ",
+    title: "የመረጡትን",
+    titleGradient: "ፕሮጀክትዎን ይስሩ",
     subtitle: "የሚፈልጉትን ይምረጡ እና የፈጣን ዋጋ ግምት ያግኙ። ምንም ድብቅ ክፍያ የለም።",
     steps: ["የፕሮጀክት አይነት", "ገጾች እና ባህሪያት", "የጊዜ ሰሌዳ", "ዋጋ ያግኙ"],
-    step1Title: "ምን እየሠሩ ነው?",
+    step1Title: "ምን ማሰራት ይፈልጋሉ?",
     step1Sub: "የሚፈልጉትን የፕሮጀክት አይነት ይምረጡ",
     step2Title: "ገጾች እና ተጨማሪ ባህሪያት",
     step2Sub: "ስንት ገጾች እና ምን ተጨማሪ ባህሪያት ይፈልጋሉ?",
@@ -96,7 +96,7 @@ const projectTypes = [
   { id: "portfolio", labelEn: "Portfolio",     labelAm: "ፖርትፎሊዮ",        icon: Palette,        base: 400,  descEn: "Personal or agency portfolio site",                 descAm: "የግል ወይም የኤጀንሲ ፖርትፎሊዮ" },
   { id: "ecommerce", labelEn: "E-Commerce",    labelAm: "ኢ-ኮሜርስ",         icon: ShoppingCart,   base: 1200, descEn: "Online store with products & checkout",             descAm: "ምርቶች እና ክፍያ ያለው የኦንላይን መደብር" },
   { id: "webapp",    labelEn: "Web App",       labelAm: "ዌብ አፕ",          icon: LayoutDashboard,base: 1500, descEn: "Full dashboard or SaaS application",                descAm: "ሙሉ ዳሽቦርድ ወይም SaaS መተግበሪያ" },
-  { id: "mobile",    labelEn: "Mobile App",    labelAm: "ሞባይል አፕ",        icon: Smartphone,     base: 2000, descEn: "React Native cross-platform app",                  descAm: "React Native ብዙ መድረክ መተግበሪያ" },
+  { id: "mobile",    labelEn: "Mobile App",    labelAm: "ሞባይል አፕ",        icon: Smartphone,     base: 2000, descEn: "flutter cross-platform app for android only",                  descAm: "React Native ብዙ መድረክ መተግበሪያ" },
   { id: "blog",      labelEn: "Blog / CMS",    labelAm: "ብሎግ / CMS",      icon: MessageSquare,  base: 600,  descEn: "Content site with admin management",               descAm: "የይዘት ጣቢያ ከአስተዳዳሪ ጋር" },
 ];
 
