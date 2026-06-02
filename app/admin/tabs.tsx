@@ -1781,18 +1781,6 @@ export function PricingTab() {
             </div>
           ))}
         </div>
-              <div className="flex items-center gap-1">
-                <span className="text-gray-500 text-sm">$</span>
-                <input
-                  type="number"
-                  value={configPrices[item.key] ?? defaults[item.key]}
-                  onChange={(e) => setConfigPrices(prev => ({ ...prev, [item.key]: parseInt(e.target.value) || 0 }))}
-                  className="w-24 px-3 py-2 bg-white/5 border border-gray-700 rounded-lg text-white text-sm font-bold focus:outline-none focus:border-blue-500 text-right"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Form */}
