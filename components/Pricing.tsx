@@ -143,7 +143,7 @@ export default function Pricing() {
         </motion.div>
 
         {/* Plans Grid */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch pt-6">
           {displayPlans.map((plan, index) => {
             const Icon = planIcons[index % planIcons.length];
             const isHighlighted = plan.highlighted;
@@ -156,9 +156,9 @@ export default function Pricing() {
                 transition={{ duration: 0.6, delay: index * 0.15 }}
                 onHoverStart={() => setHoveredPlan(index)}
                 onHoverEnd={() => setHoveredPlan(null)}
-                className={`relative flex flex-col rounded-3xl overflow-hidden transition-all duration-500 ${
+                className={`relative flex flex-col rounded-3xl transition-all duration-500 ${
                   isHighlighted
-                    ? "ring-2 ring-blue-500/60 shadow-2xl shadow-blue-500/20"
+                    ? "ring-2 ring-blue-500/60 shadow-2xl shadow-blue-500/20 -mt-4"
                     : "ring-1 ring-white/8"
                 } ${hoveredPlan === index ? "scale-[1.02] -translate-y-2" : ""}`}
                 style={{
@@ -168,29 +168,29 @@ export default function Pricing() {
                   backdropFilter: "blur(12px)",
                 }}
               >
-                {/* Badge */}
+                {/* Badge — sits INSIDE the card at the top center */}
                 {plan.badge && (
-                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10`}>
+                  <div className="absolute -top-4 left-0 right-0 flex justify-center z-20">
                     <motion.div
                       animate={{ scale: [1, 1.05, 1] }}
                       transition={{ duration: 2, repeat: Infinity }}
-                      className={`px-4 py-1.5 rounded-full text-xs font-bold tracking-wide ${
+                      className={`px-5 py-1.5 rounded-full text-xs font-bold tracking-wide shadow-lg ${
                         isHighlighted
-                          ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/30"
-                          : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30"
+                          ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-blue-500/40"
+                          : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-amber-500/40"
                       }`}
                     >
-                      {plan.badge}
+                      ✦ {plan.badge} ✦
                     </motion.div>
                   </div>
                 )}
 
                 {/* Highlighted top glow bar */}
                 {isHighlighted && (
-                  <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
+                  <div className="h-1 w-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-t-3xl" />
                 )}
 
-                <div className="p-8 flex flex-col flex-1">
+                <div className={`p-8 flex flex-col flex-1 ${plan.badge ? "pt-10" : ""}`}>
                   {/* Icon + Plan name */}
                   <div className="flex items-center gap-3 mb-6">
                     <div
