@@ -343,16 +343,16 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Skills Grid - No cards, just icons with glow */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-12 max-w-7xl mx-auto">
+        {/* Skills Grid - all icons visible with names always shown */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-6 max-w-7xl mx-auto">
           {allSkills.map((skill, index) => (
             <motion.div
               key={skill._id || skill.name}
               initial={{ opacity: 0, scale: 0, rotate: -180 }}
               animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
               transition={{ 
-                duration: 0.6, 
-                delay: index * 0.03,
+                duration: 0.5, 
+                delay: index * 0.025,
                 type: "spring",
                 stiffness: 200,
                 damping: 15
@@ -360,142 +360,52 @@ export default function Skills() {
               onHoverStart={() => setHoveredSkill(index)}
               onHoverEnd={() => setHoveredSkill(null)}
               onClick={() => setSelectedSkill(selectedSkill === index ? null : index)}
-              className="relative group flex flex-col items-center cursor-pointer"
+              className="relative group flex flex-col items-center gap-2 cursor-pointer"
             >
-              {/* Glow effect */}
+              {/* Glow */}
               <motion.div
-                className="absolute inset-0 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none"
                 style={{
-                  background: `radial-gradient(circle, ${skill.color || '#3B82F6'}50, transparent)`,
-                  width: '150%',
-                  height: '150%',
-                  left: '-25%',
-                  top: '-25%',
-                }}
-                animate={hoveredSkill === index ? {
-                  scale: [1, 1.4, 1],
-                } : {}}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                  background: `radial-gradient(circle, ${skill.color || '#3B82F6'}60, transparent)`,
+                  width: '120%', height: '120%', left: '-10%', top: '-10%',
                 }}
               />
 
               {/* Icon */}
               <motion.div
-                whileHover={{ 
-                  scale: 1.4, 
-                  rotate: 360,
-                  y: -15,
-                }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 300,
-                  damping: 10
-                }}
-                className="relative z-10 w-28 h-28 flex items-center justify-center cursor-pointer"
+                whileHover={{ scale: 1.3, y: -6 }}
+                transition={{ type: "spring", stiffness: 300, damping: 12 }}
+                className="relative z-10 w-14 h-14 flex items-center justify-center"
                 style={{
-                  filter: hoveredSkill === index ? `drop-shadow(0 0 30px ${skill.color || '#3B82F6'})` : 'none',
+                  filter: hoveredSkill === index
+                    ? `drop-shadow(0 0 12px ${skill.color || '#3B82F6'})`
+                    : 'none',
                 }}
               >
                 {skill.Icon ? (
-                  <motion.div
-                    animate={hoveredSkill === index ? {
-                      rotate: [0, 10, -10, 0],
-                    } : {}}
-                    transition={{
-                      duration: 0.5,
-                      repeat: hoveredSkill === index ? Infinity : 0,
-                    }}
-                  >
-                    <skill.Icon 
-                      size={80} 
-                      style={{ color: skill.color }}
-                    />
-                  </motion.div>
+                  <skill.Icon size={48} style={{ color: skill.color }} />
                 ) : skill.icon && skill.icon.startsWith('http') ? (
-                  <motion.img 
-                    src={skill.icon} 
+                  <img
+                    src={skill.icon}
                     alt={skill.name}
                     loading="lazy"
-                    className="w-20 h-20 object-contain"
-                    style={{ filter: `drop-shadow(0 0 10px ${skill.color})` }}
-                    animate={hoveredSkill === index ? {
-                      rotate: [0, 10, -10, 0],
-                    } : {}}
-                    transition={{
-                      duration: 0.5,
-                      repeat: hoveredSkill === index ? Infinity : 0,
-                    }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                    }}
+                    className="w-12 h-12 object-contain"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                 ) : (
-                  <motion.span 
-                    className="text-6xl" 
-                    style={{ color: skill.color }}
-                    animate={hoveredSkill === index ? {
-                      rotate: [0, 10, -10, 0],
-                    } : {}}
-                    transition={{
-                      duration: 0.5,
-                      repeat: hoveredSkill === index ? Infinity : 0,
-                    }}
-                  >
+                  <span className="text-4xl" style={{ color: skill.color }}>
                     {skill.icon || skill.name.charAt(0)}
-                  </motion.span>
+                  </span>
                 )}
               </motion.div>
 
-              {/* Name - appears on hover */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ 
-                  opacity: hoveredSkill === index || selectedSkill === index ? 1 : 0,
-                  y: hoveredSkill === index || selectedSkill === index ? 0 : 10,
-                }}
-                transition={{ duration: 0.2 }}
-                className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 whitespace-nowrap z-20"
+              {/* Name — ALWAYS visible */}
+              <p
+                className="text-xs font-medium text-center leading-tight text-gray-400 group-hover:text-white transition-colors duration-200 w-full px-1"
+                style={{ color: hoveredSkill === index ? skill.color : undefined }}
               >
-                <div className="glass px-4 py-2 rounded-xl shadow-xl">
-                  <p className="text-base font-bold">{skill.name}</p>
-                </div>
-              </motion.div>
-
-              {/* Particle effect on hover */}
-              {hoveredSkill === index && (
-                <>
-                  {[...Array(8)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-2 h-2 rounded-full"
-                      style={{
-                        background: skill.color || '#3B82F6',
-                      }}
-                      initial={{ 
-                        x: 0, 
-                        y: 0, 
-                        opacity: 1,
-                        scale: 1,
-                      }}
-                      animate={{
-                        x: Math.cos((i * Math.PI * 2) / 8) * 70,
-                        y: Math.sin((i * Math.PI * 2) / 8) * 70,
-                        opacity: 0,
-                        scale: 0,
-                      }}
-                      transition={{
-                        duration: 1.2,
-                        repeat: Infinity,
-                        ease: "easeOut",
-                      }}
-                    />
-                  ))}
-                </>
-              )}
+                {skill.name}
+              </p>
             </motion.div>
           ))}
         </div>
