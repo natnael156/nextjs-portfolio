@@ -343,69 +343,95 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Skills Grid - all icons visible with names always shown */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-6 max-w-7xl mx-auto">
+        {/* Skills Grid - bold tech badge cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 max-w-7xl mx-auto">
           {allSkills.map((skill, index) => (
             <motion.div
               key={skill._id || skill.name}
-              initial={{ opacity: 0, scale: 0, rotate: -180 }}
-              animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
-              transition={{ 
-                duration: 0.5, 
-                delay: index * 0.025,
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.4,
+                delay: index * 0.03,
                 type: "spring",
-                stiffness: 200,
-                damping: 15
+                stiffness: 180,
+                damping: 18,
               }}
-              onHoverStart={() => setHoveredSkill(index)}
-              onHoverEnd={() => setHoveredSkill(null)}
               onClick={() => setSelectedSkill(selectedSkill === index ? null : index)}
-              className="relative group flex flex-col items-center gap-2 cursor-pointer"
+              whileHover={{ y: -6, scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              className="relative group cursor-pointer rounded-2xl overflow-hidden"
+              style={{
+                background: "rgba(255,255,255,0.03)",
+                border: `1px solid rgba(255,255,255,0.08)`,
+                backdropFilter: "blur(12px)",
+              }}
             >
-              {/* Glow */}
+              {/* Coloured top accent bar */}
+              <div
+                className="h-1 w-full"
+                style={{ background: skill.color || "#3b82f6" }}
+              />
+
+              {/* Glow on hover */}
               <motion.div
-                className="absolute rounded-full blur-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 pointer-events-none"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
                 style={{
-                  background: `radial-gradient(circle, ${skill.color || '#3B82F6'}60, transparent)`,
-                  width: '120%', height: '120%', left: '-10%', top: '-10%',
+                  boxShadow: `inset 0 0 40px ${skill.color || "#3b82f6"}25`,
+                  border: `1px solid ${skill.color || "#3b82f6"}40`,
                 }}
               />
 
-              {/* Icon */}
-              <motion.div
-                whileHover={{ scale: 1.3, y: -6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 12 }}
-                className="relative z-10 w-14 h-14 flex items-center justify-center"
-                style={{
-                  filter: hoveredSkill === index
-                    ? `drop-shadow(0 0 12px ${skill.color || '#3B82F6'})`
-                    : 'none',
-                }}
-              >
-                {skill.Icon ? (
-                  <skill.Icon size={48} style={{ color: skill.color }} />
-                ) : skill.icon && skill.icon.startsWith('http') ? (
-                  <img
-                    src={skill.icon}
-                    alt={skill.name}
-                    loading="lazy"
-                    className="w-12 h-12 object-contain"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                  />
-                ) : (
-                  <span className="text-4xl" style={{ color: skill.color }}>
-                    {skill.icon || skill.name.charAt(0)}
-                  </span>
-                )}
-              </motion.div>
+              <div className="flex flex-col items-center gap-3 px-4 py-5">
+                {/* Icon */}
+                <motion.div
+                  className="w-14 h-14 flex items-center justify-center rounded-xl flex-shrink-0"
+                  style={{ background: `${skill.color || "#3b82f6"}18` }}
+                  whileHover={{ rotate: [0, -8, 8, 0] }}
+                  transition={{ duration: 0.4 }}
+                >
+                  {skill.Icon ? (
+                    <skill.Icon
+                      size={40}
+                      style={{
+                        color: skill.color,
+                        filter: `drop-shadow(0 0 8px ${skill.color}80)`,
+                      }}
+                    />
+                  ) : skill.icon && skill.icon.startsWith("http") ? (
+                    <img
+                      src={skill.icon}
+                      alt={skill.name}
+                      loading="lazy"
+                      className="w-10 h-10 object-contain"
+                      style={{ filter: `drop-shadow(0 0 6px ${skill.color}80)` }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <span
+                      className="text-3xl"
+                      style={{
+                        color: skill.color,
+                        filter: `drop-shadow(0 0 6px ${skill.color}80)`,
+                      }}
+                    >
+                      {skill.icon || skill.name.charAt(0)}
+                    </span>
+                  )}
+                </motion.div>
 
-              {/* Name — ALWAYS visible */}
-              <p
-                className="text-xs font-medium text-center leading-tight text-gray-400 group-hover:text-white transition-colors duration-200 w-full px-1"
-                style={{ color: hoveredSkill === index ? skill.color : undefined }}
-              >
-                {skill.name}
-              </p>
+                {/* Name — bold, always visible */}
+                <p
+                  className="text-sm font-bold text-center leading-tight text-white group-hover:text-white transition-colors duration-200"
+                  style={{
+                    textShadow: `0 0 20px ${skill.color || "#3b82f6"}60`,
+                  }}
+                >
+                  {skill.name}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
