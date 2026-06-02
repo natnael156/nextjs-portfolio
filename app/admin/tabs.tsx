@@ -1590,6 +1590,7 @@ export function PricingTab() {
   ];
 
   const defaults: Record<string, number> = {
+    etb_rate: 57,
     landing: 300, portfolio: 400, ecommerce: 1200, webapp: 1500, mobile: 2000, blog: 600,
     feat_auth: 300, feat_db: 400, feat_payment: 350, feat_seo: 200, feat_analytics: 250,
     feat_email: 200, feat_animations: 300, feat_cms: 350, feat_realtime: 400, feat_chat: 250,

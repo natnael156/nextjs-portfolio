@@ -5,7 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import {
   Check, ArrowRight, Globe, ShoppingCart, LayoutDashboard,
   Smartphone, Database, Zap, Shield, Search, RefreshCw, Palette,
-  MessageSquare, BarChart, Mail, ChevronRight, Calculator, Languages,
+  MessageSquare, BarChart, Mail, ChevronRight, Languages, DollarSign,
 } from "lucide-react";
 
 // ─── Translations ─────────────────────────────────────────────────
@@ -147,6 +147,17 @@ export default function Pricing() {
 
   // editable prices loaded from admin API
   const [customPrices, setCustomPrices] = useState<Record<string, number>>({});
+  // currency
+  const [currency, setCurrency] = useState<"usd" | "etb">("usd");
+  const ETB_RATE = customPrices["etb_rate"] ?? 57; // 1 USD = X ETB, editable in admin
+
+  const fmt = (usdAmount: number) => {
+    if (currency === "etb") {
+      const etb = Math.round(usdAmount * ETB_RATE);
+      return `ETB ${etb.toLocaleString()}`;
+    }
+    return `$${usdAmount.toLocaleString()}`;
+  };
 
   useEffect(() => {
     fetch("/api/pricing-config")
@@ -187,7 +198,7 @@ export default function Pricing() {
       ? timelines.find(t => t.id === timeline)?.labelEn
       : timelines.find(t => t.id === timeline)?.labelAm;
 
-    const message = `Project Quote Request:\n\nProject Type: ${ptLabel}\nPages: ${pages}\nFeatures: ${featLabels || "None"}\nTimeline: ${tlLabel}\nEstimated Budget: $${total.toLocaleString()}\n\nNote: ${note}`;
+    const message = `Project Quote Request:\n\nProject Type: ${ptLabel}\nPages: ${pages}\nFeatures: ${featLabels || "None"}\nTimeline: ${tlLabel}\nEstimated Budget: $${total.toLocaleString()} USD / ETB ${Math.round(total * ETB_RATE).toLocaleString()}\n\nNote: ${note}`;
     try {
       await fetch(`https://formspree.io/f/movzdlrb`, {
         method: "POST",
@@ -214,8 +225,9 @@ export default function Pricing() {
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          {/* Language toggle */}
-          <div className="flex justify-center mb-6">
+          {/* Language + Currency toggles */}
+          <div className="flex justify-center gap-3 mb-6 flex-wrap">
+            {/* Language */}
             <div className="inline-flex items-center gap-1 p-1 glass rounded-full border border-white/10">
               <button
                 onClick={() => setLang("en")}
@@ -228,6 +240,21 @@ export default function Pricing() {
                 className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${lang === "am" ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
               >
                 <span className="text-xs">አማ</span> አማርኛ
+              </button>
+            </div>
+            {/* Currency */}
+            <div className="inline-flex items-center gap-1 p-1 glass rounded-full border border-white/10">
+              <button
+                onClick={() => setCurrency("usd")}
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${currency === "usd" ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
+              >
+                <DollarSign size={13} /> USD
+              </button>
+              <button
+                onClick={() => setCurrency("etb")}
+                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${currency === "etb" ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg" : "text-gray-400 hover:text-white"}`}
+              >
+                <span className="text-xs font-bold">Br</span> ETB
               </button>
             </div>
           </div>
@@ -291,7 +318,7 @@ export default function Pricing() {
                             <p className={`font-semibold text-sm ${sel ? "text-white" : "text-gray-300"}`}>{lang === "en" ? pt.labelEn : pt.labelAm}</p>
                             <p className="text-xs text-gray-500 mt-0.5">{lang === "en" ? pt.descEn : pt.descAm}</p>
                           </div>
-                          <p className={`text-xs font-bold ${sel ? "text-blue-400" : "text-gray-500"}`}>{tr.from} ${price.toLocaleString()}</p>
+                          <p className={`text-xs font-bold ${sel ? "text-blue-400" : "text-gray-500"}`}>{tr.from} {fmt(price)}</p>
                         </motion.button>
                       );
                     })}
@@ -330,7 +357,7 @@ export default function Pricing() {
                               <Icon size={16} className={on ? "text-purple-400" : "text-gray-500"} />
                             </div>
                             <span className={`text-sm font-medium flex-1 ${on ? "text-white" : "text-gray-400"}`}>{lang === "en" ? feat.labelEn : feat.labelAm}</span>
-                            <span className={`text-xs font-bold flex-shrink-0 ${on ? "text-purple-400" : "text-gray-600"}`}>+${price}</span>
+                            <span className={`text-xs font-bold flex-shrink-0 ${on ? "text-purple-400" : "text-gray-600"}`}>+{fmt(price)}</span>
                             {on && <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0"><Check size={10} className="text-white" strokeWidth={3} /></div>}
                           </motion.button>
                         );
@@ -387,7 +414,15 @@ export default function Pricing() {
                         <div className="flex justify-between text-sm"><span className="text-gray-400">{tr.timeline}</span><span className="text-white font-medium">{lang === "en" ? timelines.find(tl => tl.id === timeline)?.labelEn : timelines.find(tl => tl.id === timeline)?.labelAm}</span></div>
                         <div className="border-t border-white/8 pt-3 flex justify-between items-center">
                           <span className="font-bold text-white">{tr.estimatedTotal}</span>
-                          <span className="text-2xl font-black gradient-text">${total.toLocaleString()}</span>
+                          <div className="text-right">
+                            <span className="text-2xl font-black gradient-text">{fmt(total)}</span>
+                            {currency === "usd" && (
+                              <p className="text-xs text-gray-500 mt-0.5">≈ ETB {Math.round(total * ETB_RATE).toLocaleString()}</p>
+                            )}
+                            {currency === "etb" && (
+                              <p className="text-xs text-gray-500 mt-0.5">≈ ${total.toLocaleString()} USD</p>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <form onSubmit={handleSubmit} className="space-y-4">
@@ -419,7 +454,7 @@ export default function Pricing() {
               <div className="border-t border-white/8 px-8 py-5 flex items-center justify-between bg-white/2">
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-widest mb-0.5">{tr.estimatedPrice}</p>
-                  <motion.p key={total} initial={{ scale: 1.15, color: "#60a5fa" }} animate={{ scale: 1, color: "#ffffff" }} transition={{ duration: 0.3 }} className="text-2xl font-black text-white">
+                  <motion.p key={`${total}-${currency}`} initial={{ scale: 1.15, color: "#60a5fa" }} animate={{ scale: 1, color: "#ffffff" }} transition={{ duration: 0.3 }} className="text-2xl font-black text-white">
                     {total > 0 ? `$${total.toLocaleString()}` : "—"}
                   </motion.p>
                 </div>
