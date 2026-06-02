@@ -55,17 +55,20 @@ export default function Hero() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="gradient-text">{profile?.heroTitle || 'Full Stack'}</span>
+              <span className="gradient-text">{profile?.heroTitle || 'Creative'}</span>
               <br />
               <TypeAnimation
                 sequence={[
-                  "Front-End Specialist", 2000,
-                  "Web Developer", 2000, 
-                  "Web Interface Engineer", 2000,
-                  
+                  "Software Engineer", 2500,
+                  "UI / UX Craftsman", 2500,
+                  "React Architect", 2500,
+                  "Next.js Expert", 2500,
+                  "Digital Experience Builder", 2500,
+                  "Performance Optimizer", 2500,
                 ]}
                 wrapper="span"
-                speed={50}
+                speed={55}
+                deletionSpeed={70}
                 className="text-white"
                 repeat={Infinity}
               />
