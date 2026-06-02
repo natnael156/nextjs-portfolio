@@ -251,16 +251,11 @@ function ProjectCard({
 
         {/* Tags float over the image */}
         <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-          {project.tags?.slice(0, 3).map((tag: string, i: number) => (
+          {project.tags?.map((tag: string, i: number) => (
             <span key={i} className="px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full text-xs text-white border border-white/10">
               {tag}
             </span>
           ))}
-          {project.tags?.length > 3 && (
-            <span className="px-2 py-0.5 bg-black/50 backdrop-blur-sm rounded-full text-xs text-white border border-white/10">
-              +{project.tags.length - 3}
-            </span>
-          )}
         </div>
 
         {/* Tap hint */}
