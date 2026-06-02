@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,59 +14,47 @@ export async function POST(request: NextRequest) {
     const folder = formData.get('folder') as string;
 
     if (!file) {
-      return NextResponse.json(
-        { success: false, error: 'No file provided' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'No file provided' }, { status: 400 });
     }
 
-    // Validate folder
     if (!['profile', 'projects'].includes(folder)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid folder' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'Invalid folder' }, { status: 400 });
     }
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
-      return NextResponse.json(
-        { success: false, error: 'File must be an image' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, error: 'File must be an image' }, { status: 400 });
     }
 
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      return NextResponse.json(
-        { success: false, error: 'File size must be less than 5MB' },
-        { status: 400 }
-      );
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ success: false, error: 'File size must be less than 5MB' }, { status: 400 });
     }
 
-    // Convert file to base64
+    // Convert file to buffer then base64 for Cloudinary upload
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const base64 = `data:${file.type};base64,${buffer.toString('base64')}`;
 
-    // Generate unique filename for reference
-    const timestamp = Date.now();
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const filename = `${timestamp}-${originalName}`;
+    // Upload to Cloudinary
+    const result = await cloudinary.uploader.upload(base64, {
+      folder: `portfolio/${folder}`,
+      transformation: [
+        { quality: 'auto:good' },
+        { fetch_format: 'auto' },
+        ...(folder === 'profile'
+          ? [{ width: 600, height: 600, crop: 'fill', gravity: 'face' }]
+          : [{ width: 800, height: 600, crop: 'fill' }]),
+      ],
+    });
 
     return NextResponse.json({
       success: true,
-      path: base64, // Return base64 data URL instead of file path
-      filename: filename,
-      size: file.size,
+      path: result.secure_url,
+      filename: result.public_id,
+      size: result.bytes,
       type: file.type,
     });
   } catch (error) {
     console.error('Upload error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Upload failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: 'Upload failed' }, { status: 500 });
   }
 }

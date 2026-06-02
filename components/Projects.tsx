@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { ExternalLink, Github } from "lucide-react";
-import { getOptimizedImageUrl } from "@/lib/imageOptimization";
+import Image from "next/image";
 
 // Default hardcoded projects
 const defaultProjects = [
@@ -136,26 +136,25 @@ export default function Projects() {
             >
               {/* Project Image */}
               <div className="relative h-64 overflow-hidden bg-gray-800">
-                <img
-                  src={project.image?.startsWith('data:image/') || project.image?.startsWith('/images/') 
-                    ? project.image 
-                    : getOptimizedImageUrl(
-                        project.image || '/images/projects/default.svg',
-                        800,
-                        75
-                      )
-                  }
-                  alt={project.title}
-                  width={800}
-                  height={600}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = "/images/projects/default.svg";
-                  }}
-                />
+                {project.image ? (
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = "/images/projects/default.svg";
+                    }}
+                  />
+                ) : (
+                  <img
+                    src="/images/projects/default.svg"
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                )}
                 <div 
                   className="absolute inset-0 opacity-50"
                   style={{
