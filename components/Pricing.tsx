@@ -121,9 +121,9 @@ const featuresList = [
 ];
 
 const timelines = [
-  { id: "rush",     labelEn: "Rush (< 1 week)",          labelAm: "ፈጣን (< 1 ሳምንት)",       multiplier: 1.5,  badge: "⚡ Fast" },
-  { id: "standard", labelEn: "Standard (2–3 weeks)",     labelAm: "መደበኛ (2–3 ሳምንታት)",    multiplier: 1,    badge: null },
-  { id: "relaxed",  labelEn: "Relaxed (1–2 months)",     labelAm: "ዘና ያለ (1–2 ወራት)",     multiplier: 0.85, badge: "💰 Best Value" },
+  { id: "rush",     labelEn: "Rush (< 3 Day)",          labelAm: "ፈጣን (< 3 ቀን)",       multiplier: 1.5,  badge: "⚡ Fast" },
+  { id: "standard", labelEn: "Standard (1–2 weeks)",     labelAm: "መደበኛ (1–2 ሳምንታት)",    multiplier: 1,    badge: null },
+  { id: "relaxed",  labelEn: "Relaxed (3–4 weeks)",     labelAm: "ዘና ያለ (3–4 ሳምንታት)",     multiplier: 0.85, badge: "💰 Best Value" },
 ];
 
 // ─── Editable config stored in state (admin can override via API in future) ─
