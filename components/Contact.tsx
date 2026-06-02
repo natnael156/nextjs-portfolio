@@ -77,21 +77,21 @@ export default function Contact() {
   const contactInfo = [
     { 
       icon: Mail, 
-      text: profile?.email || "hello@example.com", 
-      href: `mailto:${profile?.email || "hello@example.com"}`,
+      text: profile?.email || "natnaeltefera156@gmail.com", 
+      href: `mailto:${profile?.email || "natnaeltefera156@gmail.com"}`,
       color: "from-blue-500 to-cyan-500",
       label: "Email"
     },
     { 
       icon: Phone, 
-      text: profile?.phone || "+1 (555) 123-4567", 
-      href: `tel:${profile?.phone?.replace(/\D/g, '') || "15551234567"}`,
+      text: profile?.phone || "+251909081524", 
+      href: `tel:${profile?.phone?.replace(/\D/g, '') || "251909081524"}`,
       color: "from-green-500 to-emerald-500",
       label: "Phone"
     },
     { 
       icon: MapPin, 
-      text: profile?.location || "San Francisco, CA", 
+      text: profile?.location || "Ethiopia , addis ababa", 
       href: "#",
       color: "from-purple-500 to-pink-500",
       label: "Location"

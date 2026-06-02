@@ -343,95 +343,159 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Skills Grid - bold tech badge cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 max-w-7xl mx-auto">
+        {/* Skills Grid - No cards, just icons with glow */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-12 max-w-7xl mx-auto">
           {allSkills.map((skill, index) => (
             <motion.div
               key={skill._id || skill.name}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{
-                duration: 0.4,
+              initial={{ opacity: 0, scale: 0, rotate: -180 }}
+              animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+              transition={{ 
+                duration: 0.6, 
                 delay: index * 0.03,
                 type: "spring",
-                stiffness: 180,
-                damping: 18,
+                stiffness: 200,
+                damping: 15
               }}
+              onHoverStart={() => setHoveredSkill(index)}
+              onHoverEnd={() => setHoveredSkill(null)}
               onClick={() => setSelectedSkill(selectedSkill === index ? null : index)}
-              whileHover={{ y: -6, scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              className="relative group cursor-pointer rounded-2xl overflow-hidden"
-              style={{
-                background: "rgba(255,255,255,0.03)",
-                border: `1px solid rgba(255,255,255,0.08)`,
-                backdropFilter: "blur(12px)",
-              }}
+              className="relative group flex flex-col items-center cursor-pointer"
             >
-              {/* Coloured top accent bar */}
-              <div
-                className="h-1 w-full"
-                style={{ background: skill.color || "#3b82f6" }}
-              />
-
-              {/* Glow on hover */}
+              {/* Glow effect */}
               <motion.div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-2xl"
+                className="absolute inset-0 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{
-                  boxShadow: `inset 0 0 40px ${skill.color || "#3b82f6"}25`,
-                  border: `1px solid ${skill.color || "#3b82f6"}40`,
+                  background: `radial-gradient(circle, ${skill.color || '#3B82F6'}50, transparent)`,
+                  width: '150%',
+                  height: '150%',
+                  left: '-25%',
+                  top: '-25%',
+                }}
+                animate={hoveredSkill === index ? {
+                  scale: [1, 1.4, 1],
+                } : {}}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
                 }}
               />
 
-              <div className="flex flex-col items-center gap-3 px-4 py-5">
-                {/* Icon */}
-                <motion.div
-                  className="w-14 h-14 flex items-center justify-center rounded-xl flex-shrink-0"
-                  style={{ background: `${skill.color || "#3b82f6"}18` }}
-                  whileHover={{ rotate: [0, -8, 8, 0] }}
-                  transition={{ duration: 0.4 }}
-                >
-                  {skill.Icon ? (
-                    <skill.Icon
-                      size={40}
-                      style={{
-                        color: skill.color,
-                        filter: `drop-shadow(0 0 8px ${skill.color}80)`,
-                      }}
+              {/* Icon */}
+              <motion.div
+                whileHover={{ 
+                  scale: 1.4, 
+                  rotate: 360,
+                  y: -15,
+                }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 300,
+                  damping: 10
+                }}
+                className="relative z-10 w-28 h-28 flex items-center justify-center cursor-pointer"
+                style={{
+                  filter: hoveredSkill === index ? `drop-shadow(0 0 30px ${skill.color || '#3B82F6'})` : 'none',
+                }}
+              >
+                {skill.Icon ? (
+                  <motion.div
+                    animate={hoveredSkill === index ? {
+                      rotate: [0, 10, -10, 0],
+                    } : {}}
+                    transition={{
+                      duration: 0.5,
+                      repeat: hoveredSkill === index ? Infinity : 0,
+                    }}
+                  >
+                    <skill.Icon 
+                      size={80} 
+                      style={{ color: skill.color }}
                     />
-                  ) : skill.icon && skill.icon.startsWith("http") ? (
-                    <img
-                      src={skill.icon}
-                      alt={skill.name}
-                      loading="lazy"
-                      className="w-10 h-10 object-contain"
-                      style={{ filter: `drop-shadow(0 0 6px ${skill.color}80)` }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  ) : (
-                    <span
-                      className="text-3xl"
-                      style={{
-                        color: skill.color,
-                        filter: `drop-shadow(0 0 6px ${skill.color}80)`,
-                      }}
-                    >
-                      {skill.icon || skill.name.charAt(0)}
-                    </span>
-                  )}
-                </motion.div>
+                  </motion.div>
+                ) : skill.icon && skill.icon.startsWith('http') ? (
+                  <motion.img 
+                    src={skill.icon} 
+                    alt={skill.name}
+                    loading="lazy"
+                    className="w-20 h-20 object-contain"
+                    style={{ filter: `drop-shadow(0 0 10px ${skill.color})` }}
+                    animate={hoveredSkill === index ? {
+                      rotate: [0, 10, -10, 0],
+                    } : {}}
+                    transition={{
+                      duration: 0.5,
+                      repeat: hoveredSkill === index ? Infinity : 0,
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <motion.span 
+                    className="text-6xl" 
+                    style={{ color: skill.color }}
+                    animate={hoveredSkill === index ? {
+                      rotate: [0, 10, -10, 0],
+                    } : {}}
+                    transition={{
+                      duration: 0.5,
+                      repeat: hoveredSkill === index ? Infinity : 0,
+                    }}
+                  >
+                    {skill.icon || skill.name.charAt(0)}
+                  </motion.span>
+                )}
+              </motion.div>
 
-                {/* Name — bold, always visible */}
-                <p
-                  className="text-sm font-bold text-center leading-tight text-white group-hover:text-white transition-colors duration-200"
-                  style={{
-                    textShadow: `0 0 20px ${skill.color || "#3b82f6"}60`,
-                  }}
-                >
-                  {skill.name}
-                </p>
-              </div>
+              {/* Name - appears on hover */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ 
+                  opacity: hoveredSkill === index || selectedSkill === index ? 1 : 0,
+                  y: hoveredSkill === index || selectedSkill === index ? 0 : 10,
+                }}
+                transition={{ duration: 0.2 }}
+                className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 whitespace-nowrap z-20"
+              >
+                <div className="glass px-4 py-2 rounded-xl shadow-xl">
+                  <p className="text-base font-bold">{skill.name}</p>
+                </div>
+              </motion.div>
+
+              {/* Particle effect on hover */}
+              {hoveredSkill === index && (
+                <>
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-2 h-2 rounded-full"
+                      style={{
+                        background: skill.color || '#3B82F6',
+                      }}
+                      initial={{ 
+                        x: 0, 
+                        y: 0, 
+                        opacity: 1,
+                        scale: 1,
+                      }}
+                      animate={{
+                        x: Math.cos((i * Math.PI * 2) / 8) * 70,
+                        y: Math.sin((i * Math.PI * 2) / 8) * 70,
+                        opacity: 0,
+                        scale: 0,
+                      }}
+                      transition={{
+                        duration: 1.2,
+                        repeat: Infinity,
+                        ease: "easeOut",
+                      }}
+                    />
+                  ))}
+                </>
+              )}
             </motion.div>
           ))}
         </div>

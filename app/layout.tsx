@@ -12,7 +12,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Natnael Tefera — Front-End Developer",
+    default: "Natnael Tefera Portfolio",
     template: "%s | Natnael Tefera",
   },
   description: "Front-end developer specializing in React, Next.js, and modern web technologies. Building fast, beautiful, and accessible web experiences.",
