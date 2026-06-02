@@ -1548,3 +1548,288 @@ export function SettingsTab() {
     </div>
   );
 }
+
+// Pricing Tab
+export function PricingTab() {
+  const [plans, setPlans] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    period: "project",
+    description: "",
+    features: "",
+    highlighted: false,
+    badge: "",
+    buttonText: "Get Started",
+    order: 0,
+  });
+
+  useEffect(() => {
+    loadPlans();
+  }, []);
+
+  const loadPlans = async () => {
+    try {
+      const res = await fetch('/api/pricing');
+      const data = await res.json();
+      if (data.success) setPlans(data.data);
+    } catch (err) {
+      console.error('Error loading plans:', err);
+    }
+  };
+
+  const handleSave = async () => {
+    if (!formData.name || !formData.price || !formData.description) {
+      alert('Please fill in name, price, and description.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const featuresArray = formData.features
+        .split('\n')
+        .map((f) => f.trim())
+        .filter(Boolean);
+
+      const payload = { ...formData, features: featuresArray };
+      const method = editingId ? 'PUT' : 'POST';
+      const body = editingId ? { ...payload, _id: editingId } : payload;
+
+      const res = await fetch('/api/pricing', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(editingId ? 'Plan updated! ✅' : 'Plan added! ✅');
+        setFormData({ name: '', price: '', period: 'project', description: '', features: '', highlighted: false, badge: '', buttonText: 'Get Started', order: 0 });
+        setEditingId(null);
+        loadPlans();
+      } else {
+        alert('Error: ' + data.error);
+      }
+    } catch (err) {
+      alert('Error: ' + err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (plan: any) => {
+    setEditingId(plan._id);
+    setFormData({
+      name: plan.name,
+      price: plan.price,
+      period: plan.period || 'project',
+      description: plan.description,
+      features: (plan.features || []).join('\n'),
+      highlighted: plan.highlighted || false,
+      badge: plan.badge || '',
+      buttonText: plan.buttonText || 'Get Started',
+      order: plan.order || 0,
+    });
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this plan?')) return;
+    try {
+      await fetch(`/api/pricing?id=${id}`, { method: 'DELETE' });
+      loadPlans();
+    } catch (err) {
+      alert('Error: ' + err);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold">Pricing Plans</h2>
+        <div className="glass px-4 py-2 rounded-xl">
+          <p className="text-sm text-gray-400">
+            <span className="text-blue-400 font-bold">{plans.length}</span> plans
+          </p>
+        </div>
+      </div>
+
+      {/* Form */}
+      <div className="glass p-6 rounded-2xl space-y-4">
+        <h3 className="text-xl font-bold">{editingId ? 'Edit' : 'Add'} Plan</h3>
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Plan Name *</label>
+            <input
+              type="text"
+              placeholder="e.g., Starter, Professional, Enterprise"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Price *</label>
+            <input
+              type="text"
+              placeholder='e.g., $499 or "Custom"'
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Period</label>
+            <input
+              type="text"
+              placeholder="e.g., project, month"
+              value={formData.period}
+              onChange={(e) => setFormData({ ...formData, period: e.target.value })}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Badge Text</label>
+            <input
+              type="text"
+              placeholder='e.g., "Most Popular" or leave empty'
+              value={formData.badge}
+              onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Button Text</label>
+            <input
+              type="text"
+              placeholder="e.g., Get Started, Let's Talk"
+              value={formData.buttonText}
+              onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold mb-2 text-gray-300">Order</label>
+            <input
+              type="number"
+              value={formData.order}
+              onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+              className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-300">Description *</label>
+          <textarea
+            placeholder="Brief description of this plan..."
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows={2}
+            className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white resize-none"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-2 text-gray-300">
+            Features <span className="text-gray-500 text-xs">(one per line)</span>
+          </label>
+          <textarea
+            placeholder={"Responsive design\nMobile-first\nSEO setup\n7-day delivery"}
+            value={formData.features}
+            onChange={(e) => setFormData({ ...formData, features: e.target.value })}
+            rows={6}
+            className="w-full px-4 py-3 bg-white/5 border-2 border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 text-white resize-none font-mono text-sm"
+          />
+        </div>
+
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            id="highlighted"
+            checked={formData.highlighted}
+            onChange={(e) => setFormData({ ...formData, highlighted: e.target.checked })}
+            className="w-5 h-5 rounded border-gray-700 bg-white/5 text-blue-600"
+          />
+          <label htmlFor="highlighted" className="text-sm font-semibold text-gray-300 cursor-pointer">
+            Highlight this plan (shows gradient border + colored CTA)
+          </label>
+        </div>
+
+        <div className="flex gap-3">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={handleSave}
+            disabled={loading}
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl font-semibold disabled:opacity-50"
+          >
+            <Save size={18} />
+            {loading ? 'Saving...' : editingId ? 'Update Plan' : 'Add Plan'}
+          </motion.button>
+          {editingId && (
+            <button
+              onClick={() => {
+                setEditingId(null);
+                setFormData({ name: '', price: '', period: 'project', description: '', features: '', highlighted: false, badge: '', buttonText: 'Get Started', order: 0 });
+              }}
+              className="px-6 py-3 bg-gray-700 rounded-xl font-semibold"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Plan List */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold">Existing Plans</h3>
+        {plans.length === 0 && (
+          <p className="text-gray-500 text-sm">No plans yet. The default plans will show on the site until you add custom ones.</p>
+        )}
+        {plans.map((plan) => (
+          <div key={plan._id} className={`glass p-6 rounded-2xl border ${plan.highlighted ? 'border-blue-500/40' : 'border-transparent'}`}>
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-1">
+                  <h4 className="text-xl font-bold">{plan.name}</h4>
+                  {plan.highlighted && <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-xs rounded-full">Highlighted</span>}
+                  {plan.badge && <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs rounded-full">{plan.badge}</span>}
+                </div>
+                <p className="text-2xl font-black text-blue-400">{plan.price} <span className="text-sm text-gray-500 font-normal">/ {plan.period}</span></p>
+                <p className="text-gray-400 text-sm mt-1 mb-3">{plan.description}</p>
+                <ul className="space-y-1">
+                  {(plan.features || []).map((f: string, i: number) => (
+                    <li key={i} className="text-gray-500 text-xs flex items-center gap-2">
+                      <span className="w-1 h-1 rounded-full bg-blue-400 flex-shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="flex gap-2 ml-4">
+                <button
+                  onClick={() => handleEdit(plan)}
+                  className="p-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-blue-400"
+                >
+                  <Edit size={18} />
+                </button>
+                <button
+                  onClick={() => handleDelete(plan._id)}
+                  className="p-2 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-red-400"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

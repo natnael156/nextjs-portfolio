@@ -12,7 +12,8 @@ import {
   ProjectsTab, 
   EducationTab, 
   CertificationsTab,
-  SettingsTab 
+  SettingsTab,
+  PricingTab
 } from "./tabs";
 
 export default function AdminPanel() {
@@ -56,6 +57,7 @@ export default function AdminPanel() {
     { id: "education", name: "Education", icon: Award },
     { id: "certifications", name: "Certifications", icon: Award },
     { id: "projects", name: "Projects", icon: FolderOpen },
+    { id: "pricing", name: "Pricing", icon: Settings },
     { id: "settings", name: "Settings", icon: Settings },
   ];
 
@@ -180,6 +182,7 @@ export default function AdminPanel() {
               {activeTab === "education" && <EducationTab />}
               {activeTab === "certifications" && <CertificationsTab />}
               {activeTab === "projects" && <ProjectsTab />}
+              {activeTab === "pricing" && <PricingTab />}
               {activeTab === "settings" && <SettingsTab />}
             </div>
           </div>
@@ -195,9 +198,9 @@ function ProfileTab() {
     name: "Your Name",
     title: "Full Stack Developer",
     bio: "A passionate developer...",
-    location: "San Francisco, CA",
-    email: "hello@example.com",
-    phone: "+1 (555) 123-4567",
+    location: "Ethiopia, addis abeba",
+    email: "natnaeltefera156@gmail.com",
+    phone: "+251909081524",
     image: "",
     github: "https://github.com",
     linkedin: "https://linkedin.com",
