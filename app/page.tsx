@@ -14,7 +14,6 @@ import ParticlesBackground from "@/components/ParticlesBackground";
 import ScrollProgress from "@/components/ScrollProgress";
 import FloatingElements from "@/components/FloatingElements";
 import LoadingScreen from "@/components/LoadingScreen";
-import ChatBot from "@/components/ChatBot";
 
 export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -28,8 +27,7 @@ export default function Home() {
     <>
       <AnimatePresence mode="wait">
         {!isLoaded && <LoadingScreen />}
-      </AnimatePresence>
-      
+      </AnimatePresence>      
       <main className="relative min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 overflow-hidden" role="main">
         {/* Professional Background Effects - Optimized */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-[1]">
@@ -100,8 +98,6 @@ export default function Home() {
           </div>
         </footer>
       </main>
-
-      <ChatBot />
     </>
   );
 }
